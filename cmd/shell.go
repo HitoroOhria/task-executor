@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
 )
 
 const incrementalSearchTool = "peco"
@@ -110,10 +112,31 @@ func printInputPrompt(varName string, padding int, required bool) {
 	fmt.Printf(`Enter %-*s (%s): `, promptPadding, promptVarName, necessity)
 }
 
+// readInput は値の入力を受け付ける
+// Ctrl + C でキャンセルされた場合は、プログラムを正常終了する
 func readInput() string {
+	// Ctrl+C (SIGINT) を補足
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT)
+
+	// 入力がキャンセルされた場合、何もしない
+	go func() {
+		<-sigCh
+		fmt.Println()
+		os.Exit(0)
+	}()
+
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
+		// 入力が完了したらシグナルハンドラーを停止
+		signal.Reset(syscall.SIGINT)
+
 		return scanner.Text()
+	}
+
+	err := scanner.Err()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error: scanner.Err():", err)
 	}
 
 	return ""
