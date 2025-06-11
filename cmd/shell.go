@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
+
+	"github.com/go-task/task/v3/errors"
 )
 
 const incrementalSearchTool = "peco"
@@ -27,8 +29,8 @@ var (
 	`, taskfile, incrementalSearchTool)
 	}
 
-	ErrSpecifiedTaskfileNotFound = fmt.Errorf("specifiled taskfile not found")
-	ErrSelectedTaskfileNotFound  = fmt.Errorf("selected taskfile not found")
+	ErrSpecifiedTaskfileNotFound = errors.New("specifiled taskfile not found")
+	ErrSelectedTaskfileNotFound  = errors.New("selected taskfile not found")
 )
 
 func findFileByName(name string) (string, error) {
