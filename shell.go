@@ -8,17 +8,21 @@ import (
 	"strings"
 )
 
-const selectTaskNameCommand = `
-  task -t %s -l --sort none \
-    | tail -n +2 \
-    | peco \
-    | sed -E 's/^\* ([^ ]+):.*/\1/' \
-    | sed -E 's/:$//'
-`
+const incrementalSearchTool = "peco"
+
+func selectTaskNameCommand(taskfile string) string {
+	return fmt.Sprintf(`
+	  task -t %s -l --sort none | \
+	    tail -n +2 | \
+	    sed 's/^\*//' | \
+	    %s | \
+	    sed -E 's/^ ([^ ]+):.*/\1/' | \
+	    sed -E 's/:$//'
+	`, taskfile, incrementalSearchTool)
+}
 
 func selectTaskName(taskfile string) (string, error) {
-	script := fmt.Sprintf(selectTaskNameCommand, taskfile)
-	cmd := exec.Command("sh", "-c", script)
+	cmd := exec.Command("sh", "-c", selectTaskNameCommand(taskfile))
 	output, err := cmd.Output()
 	if err != nil {
 		return "", fmt.Errorf("cmd.Output: %w", err)
