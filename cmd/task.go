@@ -40,27 +40,73 @@ func VarIsSpecifiable(name string, variable ast.Var) bool {
 }
 
 // Vars は変数名と値のセット
-type Vars map[string]string
+type Vars []*Var
 
-func (v Vars) SetOptional(name, value string) {
-	v[name] = value
+type Var struct {
+	Required bool
+	Name     string
+	Value    string
 }
 
-func (v Vars) SetRequired(name, value string) error {
-	if value == "" {
-		return fmt.Errorf("variable %s is required", name)
+func (vs *Vars) FindByName(name string) *Var {
+	for _, v := range *vs {
+		if v.Name == name {
+			return v
+		}
 	}
 
-	v[name] = value
 	return nil
+}
+
+func (vs *Vars) SetNameAsOptional(name string) {
+	*vs = append(*vs, &Var{
+		Required: false,
+		Name:     name,
+		Value:    "",
+	})
+}
+
+func (vs *Vars) SetNameAsRequired(name string) {
+	*vs = append(*vs, &Var{
+		Required: true,
+		Name:     name,
+		Value:    "",
+	})
+}
+
+func (vs *Vars) SetValue(name, value string) error {
+	v := vs.FindByName(name)
+	if v == nil {
+		return fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
+	}
+
+	if v.Required {
+		if value == "" {
+			return fmt.Errorf("variable %s is required", name)
+		}
+	}
+
+	v.Value = value
+	return nil
+}
+
+func (vs *Vars) GetMaxNameLen() int {
+	maxLen := 0
+	for _, v := range *vs {
+		if len(v.Name) > maxLen {
+			maxLen = len(v.Name)
+		}
+	}
+
+	return maxLen
 }
 
 // CommandArgs はコマンドの引数を組み立てる
 // e.g. { "NAME": "john", "age": "25" } => [NAME="john", age="25"]
-func (v Vars) CommandArgs() []string {
-	args := make([]string, 0, len(v))
-	for name, value := range v {
-		arg := fmt.Sprintf(`%s="%s"`, name, value)
+func (vs *Vars) CommandArgs() []string {
+	args := make([]string, 0, len(*vs))
+	for _, v := range *vs {
+		arg := fmt.Sprintf(`%s="%s"`, v.Name, v.Value)
 		args = append(args, arg)
 	}
 

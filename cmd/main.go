@@ -37,8 +37,8 @@ func main() {
 		return
 	}
 
-	// タスクの変数の値を受け付け
-	vars := make(Vars)
+	// タスクの変数を収集
+	vars := make(Vars, 0)
 	for name, task := range tf.Tasks.All(NoSort) {
 		if name != taskName {
 			continue
@@ -46,21 +46,38 @@ func main() {
 
 		if task.Requires != nil {
 			for _, variable := range task.Requires.Vars {
-				value := readRequiredInput(variable.Name)
-				err = vars.SetRequired(variable.Name, value)
-				if err != nil {
-					handleError(err, "failed to set required variable")
-					return
-				}
+				vars.SetNameAsRequired(variable.Name)
 			}
 		}
 		if task.Vars != nil {
 			for varName, variable := range task.Vars.All() {
 				if VarIsSpecifiable(varName, variable) {
-					value := readOptionalInput(varName)
-					vars.SetOptional(varName, value)
+					vars.SetNameAsOptional(varName)
 				}
 			}
+		}
+	}
+
+	// タスクの変数の値を入力
+	for _, v := range vars {
+		padding := vars.GetMaxNameLen()
+
+		if v.Required {
+			value := readRequiredInput(v.Name, padding)
+			err = vars.SetValue(v.Name, value)
+			if err != nil {
+				handleError(err, "failed to set value")
+				return
+			}
+
+			continue
+		}
+
+		value := readOptionalInput(v.Name, padding)
+		err = vars.SetValue(v.Name, value)
+		if err != nil {
+			handleError(err, "failed to set value")
+			return
 		}
 	}
 

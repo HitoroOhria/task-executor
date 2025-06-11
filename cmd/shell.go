@@ -40,22 +40,29 @@ func readFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-func readOptionalInput(prompt string) string {
-	return readInput(prompt, false)
+func readOptionalInput(varName string, padding int) string {
+	printInputPrompt(varName, padding, false)
+	return readInput()
 }
 
-func readRequiredInput(prompt string) string {
-	return readInput(prompt, true)
+func readRequiredInput(varName string, padding int) string {
+	printInputPrompt(varName, padding, true)
+	return readInput()
 }
 
-func readInput(prompt string, required bool) string {
+func printInputPrompt(varName string, padding int, required bool) {
 	necessity := "optional"
 	if required {
 		necessity = "required"
 	}
 
-	fmt.Printf(`Enter var "%s" (%s): `, prompt, necessity)
+	promptPadding := padding + 2
+	promptVarName := fmt.Sprintf(`"%s"`, varName)
 
+	fmt.Printf(`Enter %-*s (%s): `, promptPadding, promptVarName, necessity)
+}
+
+func readInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
 		return scanner.Text()
