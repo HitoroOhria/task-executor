@@ -9,12 +9,13 @@ import (
 	"strings"
 )
 
-var searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
-
 const incrementalSearchTool = "peco"
 
-var selectTaskNameCommand = func(taskfile string) string {
-	return fmt.Sprintf(`
+var (
+	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
+
+	selectTaskNameCommand = func(taskfile string) string {
+		return fmt.Sprintf(`
 	  task -t %s -l --sort none | \
 	    tail -n +2 | \
 	    sed 's/^\*//' | \
@@ -22,7 +23,10 @@ var selectTaskNameCommand = func(taskfile string) string {
 	    sed -E 's/^ ([^ ]+):.*/\1/' | \
 	    sed -E 's/:$//'
 	`, taskfile, incrementalSearchTool)
-}
+	}
+
+	ErrSelectedTaskfileNotFound = fmt.Errorf("taskfile not found")
+)
 
 // findTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
 func findTaskfileName() (string, error) {
@@ -67,7 +71,12 @@ func selectTaskName(taskfile string) (string, error) {
 		return "", fmt.Errorf("cmd.Output: %w", err)
 	}
 
-	return strings.TrimSpace(string(output)), nil
+	o := strings.TrimSpace(string(output))
+	if o == "" {
+		return "", ErrSelectedTaskfileNotFound
+	}
+
+	return o, nil
 }
 
 func readFile(path string) ([]byte, error) {

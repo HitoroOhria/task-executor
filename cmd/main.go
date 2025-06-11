@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/go-task/task/v3/errors"
 )
 
 func getArgs() string {
@@ -29,6 +31,11 @@ func main() {
 
 	taskName, err := selectTaskName(taskfileName)
 	if err != nil {
+		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
+		if errors.Is(err, ErrSelectedTaskfileNotFound) {
+			os.Exit(0)
+		}
+
 		handleError(err, "failed to select task name")
 		return
 	}
