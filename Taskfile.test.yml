@@ -30,6 +30,18 @@ tasks:
     desc: Command with vars and requires
     silent: true
     cmds:
+      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}}"
+      - echo "REQUIRED={{.REQUIRED}}"
+    vars:
+      OPTIONAL1: "{{.OPTIONAL1}}"
+      VALUE: "bar"
+    requires:
+      vars: [ REQUIRED ]
+
+  with-vars-and-requires-and-long-var:
+    desc: Command with vars and requires and long var
+    silent: true
+    cmds:
       - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}} LOOOOOOOOOOOOOOOOOONG_OPTIONAL2={{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
       - echo "REQUIRED={{.REQUIRED}}"
     vars:
