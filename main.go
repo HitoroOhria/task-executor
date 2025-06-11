@@ -37,6 +37,7 @@ func main() {
 		return
 	}
 
+	// タスクの変数の値を受け付け
 	vars := make(Vars)
 	for name, task := range tf.Tasks.All(NoSort) {
 		if name != taskName {
@@ -64,6 +65,7 @@ func main() {
 		}
 	}
 
+	// タスクを実行
 	err = runTask(taskfileName, taskName, vars.CommandArgs()...)
 	if err != nil {
 		handleError(err, "failed to run task")
