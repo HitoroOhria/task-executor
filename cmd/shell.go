@@ -117,26 +117,9 @@ func readFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-func readOptionalInput(varName string, padding int) string {
-	printInputPrompt(varName, padding, false)
+func readInputValue(prompt string) string {
+	fmt.Print(prompt)
 	return readInput()
-}
-
-func readRequiredInput(varName string, padding int) string {
-	printInputPrompt(varName, padding, true)
-	return readInput()
-}
-
-func printInputPrompt(varName string, padding int, required bool) {
-	necessity := "optional"
-	if required {
-		necessity = "required"
-	}
-
-	promptPadding := padding + 2
-	promptVarName := fmt.Sprintf(`"%s"`, varName)
-
-	fmt.Printf(`Enter %-*s (%s): `, promptPadding, promptVarName, necessity)
 }
 
 // readInput は値の入力を受け付ける

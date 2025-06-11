@@ -80,10 +80,13 @@ func main() {
 
 	// タスクの変数の値を入力
 	for _, v := range vars {
-		padding := vars.GetMaxNameLen()
-
 		if v.Required {
-			value := readRequiredInput(v.Name, padding)
+			prompt, err := vars.GetInputPrompt(v.Name)
+			if err != nil {
+				handleError(err, "failed to get input prompt")
+				return
+			}
+			value := readInputValue(prompt)
 			err = vars.SetValue(v.Name, value)
 			if err != nil {
 				handleError(err, "failed to set value")
@@ -93,7 +96,12 @@ func main() {
 			continue
 		}
 
-		value := readOptionalInput(v.Name, padding)
+		prompt, err := vars.GetInputPrompt(v.Name)
+		if err != nil {
+			handleError(err, "failed to get input prompt")
+			return
+		}
+		value := readInputValue(prompt)
 		err = vars.SetValue(v.Name, value)
 		if err != nil {
 			handleError(err, "failed to set value")

@@ -64,6 +64,23 @@ func (vs *Vars) GetMaxNameLen() int {
 	return maxLen
 }
 
+func (vs *Vars) GetInputPrompt(name string) (string, error) {
+	variable := vs.FindByName(name)
+	if variable == nil {
+		return "", fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
+	}
+
+	necessity := "optional"
+	if variable.Required {
+		necessity = "required"
+	}
+
+	promptPadding := vs.GetMaxNameLen() + 2 // plus double quote
+	promptVarName := fmt.Sprintf(`"%s"`, variable.Name)
+
+	return fmt.Sprintf(`Enter %-*s (%s): `, promptPadding, promptVarName, necessity), nil
+}
+
 // CommandArgs はコマンドの引数を組み立てる
 // e.g. { "NAME": "john", "age": "25" } => [NAME="john", age="25"]
 func (vs *Vars) CommandArgs() []string {
