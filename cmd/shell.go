@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
+var searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
+
 const incrementalSearchTool = "peco"
 
-func selectTaskNameCommand(taskfile string) string {
+var selectTaskNameCommand = func(taskfile string) string {
 	return fmt.Sprintf(`
 	  task -t %s -l --sort none | \
 	    tail -n +2 | \
@@ -19,6 +22,42 @@ func selectTaskNameCommand(taskfile string) string {
 	    sed -E 's/^ ([^ ]+):.*/\1/' | \
 	    sed -E 's/:$//'
 	`, taskfile, incrementalSearchTool)
+}
+
+// findTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
+func findTaskfileName() (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	taskfileName := ""
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+
+		for _, taskfile := range searchTaskfiles {
+			if info.Name() == taskfile {
+				taskfileName = info.Name()
+				return nil
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		return "", fmt.Errorf("filepath.Walk: %w", err)
+	}
+
+	if taskfileName == "" {
+		return "", fmt.Errorf("taskfile not found")
+	}
+
+	return taskfileName, nil
 }
 
 func selectTaskName(taskfile string) (string, error) {

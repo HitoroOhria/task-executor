@@ -7,17 +7,25 @@ import (
 	"os"
 )
 
-const defaultTaskfileName = "Taskfile.yml"
-
 func getArgs() string {
-	taskfileName := flag.String("taskfile", defaultTaskfileName, "Taskfile name.")
+	taskfileName := flag.String("taskfile", "", "Taskfile name.")
 	flag.Parse()
 
 	return *taskfileName
 }
 
 func main() {
+	var err error
 	taskfileName := getArgs()
+
+	// 引数で Taskfile の指定がなければ、カレントディレクトリから探索する
+	if taskfileName == "" {
+		taskfileName, err = findTaskfileName()
+		if err != nil {
+			handleError(err, "failed to get taskfile name")
+			return
+		}
+	}
 
 	taskName, err := selectTaskName(taskfileName)
 	if err != nil {
