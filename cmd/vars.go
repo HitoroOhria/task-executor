@@ -5,12 +5,6 @@ import "fmt"
 // Vars は変数名と値のセット
 type Vars []*Var
 
-type Var struct {
-	Required bool
-	Name     string
-	Value    string
-}
-
 func (vs *Vars) FindByName(name string) *Var {
 	for _, v := range *vs {
 		if v.Name == name {
@@ -21,20 +15,8 @@ func (vs *Vars) FindByName(name string) *Var {
 	return nil
 }
 
-func (vs *Vars) SetNameAsOptional(name string) {
-	*vs = append(*vs, &Var{
-		Required: false,
-		Name:     name,
-		Value:    "",
-	})
-}
-
-func (vs *Vars) SetNameAsRequired(name string) {
-	*vs = append(*vs, &Var{
-		Required: true,
-		Name:     name,
-		Value:    "",
-	})
+func (vs *Vars) Append(v *Var) {
+	*vs = append(*vs, v)
 }
 
 func (vs *Vars) SetValue(name, value string) error {
@@ -43,14 +25,7 @@ func (vs *Vars) SetValue(name, value string) error {
 		return fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
 	}
 
-	if v.Required {
-		if value == "" {
-			return fmt.Errorf("variable %s is required", name)
-		}
-	}
-
-	v.Value = value
-	return nil
+	return v.SetValue(value)
 }
 
 func (vs *Vars) GetMaxNameLen() int {
@@ -65,20 +40,13 @@ func (vs *Vars) GetMaxNameLen() int {
 }
 
 func (vs *Vars) GetInputPrompt(name string) (string, error) {
-	variable := vs.FindByName(name)
-	if variable == nil {
+	v := vs.FindByName(name)
+	if v == nil {
 		return "", fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
 	}
 
-	necessity := "optional"
-	if variable.Required {
-		necessity = "required"
-	}
-
-	promptPadding := vs.GetMaxNameLen() + 2 // plus double quote
-	promptVarName := fmt.Sprintf(`"%s"`, variable.Name)
-
-	return fmt.Sprintf(`Enter %-*s (%s): `, promptPadding, promptVarName, necessity), nil
+	maxLen := vs.GetMaxNameLen()
+	return v.GetInputPrompt(maxLen), nil
 }
 
 // CommandArgs はコマンドの引数を組み立てる
@@ -91,4 +59,50 @@ func (vs *Vars) CommandArgs() []string {
 	}
 
 	return args
+}
+
+type Var struct {
+	Required bool
+	Name     string
+	Value    string
+}
+
+func CreateRequiredVar(name string) *Var {
+	return &Var{
+		Required: true,
+		Name:     name,
+		Value:    "",
+	}
+}
+
+func CreateOptionalVar(name string) *Var {
+	return &Var{
+		Required: false,
+		Name:     name,
+		Value:    "",
+	}
+}
+
+func (v *Var) SetValue(value string) error {
+	if v.Required {
+		if value == "" {
+			return fmt.Errorf("variable %s is required", v.Name)
+		}
+	}
+
+	v.Value = value
+	return nil
+}
+
+func (v *Var) GetInputPrompt(padding int) string {
+	necessity := "optional"
+	if v.Required {
+		necessity = "required"
+	}
+
+	pad := padding + 2 // plus double quote
+	varName := fmt.Sprintf(`"%s"`, v.Name)
+
+	return fmt.Sprintf(`Enter %-*s (%s): `, pad, varName, necessity)
+
 }

@@ -65,14 +65,14 @@ func main() {
 		}
 
 		if task.Requires != nil {
-			for _, variable := range task.Requires.Vars {
-				vars.SetNameAsRequired(variable.Name)
+			for _, v := range task.Requires.Vars {
+				vars.Append(CreateRequiredVar(v.Name))
 			}
 		}
 		if task.Vars != nil {
 			for varName, variable := range task.Vars.All() {
 				if VarIsSpecifiable(varName, variable) {
-					vars.SetNameAsOptional(varName)
+					vars.Append(CreateOptionalVar(varName))
 				}
 			}
 		}
