@@ -12,21 +12,12 @@ tasks:
   build:
     desc: Build go program
     cmds:
-      - go build -o main
+      - go build -o main ./...
 
   run:
     desc: Run go program
     cmds:
-      - go run ./... -taskfile="{{.TASKFILE}}"
-    vars:
-      TASKFILE: "{{.TASKFILE}}"
-
-  run:test:
-    desc: Run go program for debug
-    cmds:
-      - task: run
-        vars:
-          TASKFILE: "Taskfile.test.yml"
+      - go run ./... -taskfile="Taskfile.test.yml"
 
   fmt:
     desc: Format go program
