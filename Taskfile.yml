@@ -9,6 +9,11 @@ tasks:
     cmds:
       - task -l --sort none
 
+  build:
+    desc: Build go program
+    cmds:
+      - go build -o main
+
   run:
     desc: Run go program
     cmds:
