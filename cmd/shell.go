@@ -114,6 +114,7 @@ func printInputPrompt(varName string, padding int, required bool) {
 
 // readInput は値の入力を受け付ける
 // Ctrl + C でキャンセルされた場合は、プログラムを正常終了する
+// FIXME context & goroutine を使用した方法もあるので、検討する
 func readInput() string {
 	// Ctrl+C (SIGINT) を補足
 	sigCh := make(chan os.Signal, 1)
