@@ -27,17 +27,17 @@ var (
 	`, taskfile, incrementalSearchTool)
 	}
 
-	ErrSelectedTaskfileNotFound = fmt.Errorf("taskfile not found")
+	ErrSpecifiedTaskfileNotFound = fmt.Errorf("specifiled taskfile not found")
+	ErrSelectedTaskfileNotFound  = fmt.Errorf("selected taskfile not found")
 )
 
-// findTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
-func findTaskfileName() (string, error) {
+func findFileByName(name string) (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 
-	taskfileName := ""
+	foundName := ""
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -46,11 +46,9 @@ func findTaskfileName() (string, error) {
 			return nil
 		}
 
-		for _, taskfile := range searchTaskfiles {
-			if info.Name() == taskfile {
-				taskfileName = info.Name()
-				return nil
-			}
+		if info.Name() == name {
+			foundName = info.Name()
+			return nil
 		}
 
 		return nil
@@ -59,6 +57,24 @@ func findTaskfileName() (string, error) {
 		return "", fmt.Errorf("filepath.Walk: %w", err)
 	}
 
+	return foundName, nil
+}
+
+// findTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
+func findTaskfileName() (string, error) {
+	taskfileName := ""
+	for _, taskfile := range searchTaskfiles {
+		found, err := findFileByName(taskfile)
+		if err == nil {
+			return "", fmt.Errorf("findFileByName: %w", err)
+		}
+		if found == "" {
+			continue
+		}
+
+		taskfileName = found
+		break
+	}
 	if taskfileName == "" {
 		return "", fmt.Errorf("taskfile not found")
 	}
@@ -67,6 +83,14 @@ func findTaskfileName() (string, error) {
 }
 
 func selectTaskName(taskfile string) (string, error) {
+	found, err := findFileByName(taskfile)
+	if err != nil {
+		return "", fmt.Errorf("findFileByName: %w", err)
+	}
+	if found == "" {
+		return "", ErrSpecifiedTaskfileNotFound
+	}
+
 	cmd := exec.Command("sh", "-c", selectTaskNameCommand(taskfile))
 	output, err := cmd.Output()
 	if err != nil {
@@ -74,6 +98,7 @@ func selectTaskName(taskfile string) (string, error) {
 	}
 
 	o := strings.TrimSpace(string(output))
+	// インクリメンタルサーチ中に Ctrl + C で中断された場合は、特定のエラーを返す
 	if o == "" {
 		return "", ErrSelectedTaskfileNotFound
 	}

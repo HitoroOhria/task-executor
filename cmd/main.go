@@ -31,9 +31,14 @@ func main() {
 
 	taskName, err := selectTaskName(taskfileName)
 	if err != nil {
+		if errors.Is(err, ErrSpecifiedTaskfileNotFound) {
+			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfileName))
+			return
+		}
 		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
 		if errors.Is(err, ErrSelectedTaskfileNotFound) {
 			os.Exit(0)
+			return
 		}
 
 		handleError(err, "failed to select task name")
@@ -105,9 +110,9 @@ func main() {
 }
 
 func handleError(err error, msg string) {
-	_, printErr := fmt.Fprintf(os.Stderr, "%s: %v\n", msg, err)
+	_, printErr := fmt.Fprintf(os.Stderr, "%s.\n%v.\n", msg, err)
 	if printErr != nil {
-		log.Fatalf("fmt.Fprintf: %v. and %s: %v\n", printErr, msg, err)
+		log.Fatalf("fmt.Fprintf: %v.\n%s.\n%v.\n", printErr, msg, err)
 	}
 
 	os.Exit(1)
