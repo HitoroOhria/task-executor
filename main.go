@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
-	"strings"
 )
 
 const defaultTaskfileName = "Taskfile.yml"
@@ -21,34 +19,55 @@ func getArgs() string {
 func main() {
 	taskfileName := getArgs()
 
-	taskName, err := selectTaskName()
+	taskName, err := selectTaskName(taskfileName)
 	if err != nil {
 		handleError(err, "failed to select task name")
 		return
 	}
-	fmt.Printf("taskName = %+v\n", taskName)
 
-	// Taskfile.yml を開く
 	file, err := readFile(taskfileName)
 	if err != nil {
 		handleError(err, "failed to read file")
 		return
 	}
 
-	// パース用構造体に読み込む
 	tf, err := NewTaskfile(file)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return
 	}
 
-	// タスク一覧を表示
+	vars := make(Vars)
 	for name, task := range tf.Tasks.All(NoSort) {
-		fmt.Printf("Task: %s\n", name)
-		fmt.Println("  Vars:")
-		for varName := range task.Vars.All() {
-			fmt.Printf("    - %s\n", varName)
+		if name != taskName {
+			continue
 		}
+
+		if task.Vars != nil {
+			for varName, variable := range task.Vars.All() {
+				if VarIsSpecifiable(varName, variable) {
+					value := readInput(varName)
+					vars.SetOptional(varName, value)
+				}
+			}
+		}
+
+		if task.Requires != nil {
+			for _, variable := range task.Requires.Vars {
+				value := readInput(variable.Name)
+				err = vars.SetRequired(variable.Name, value)
+				if err != nil {
+					handleError(err, "failed to set required variable")
+					return
+				}
+			}
+		}
+	}
+
+	err = runTask(taskfileName, taskName, vars.CommandArgs()...)
+	if err != nil {
+		handleError(err, "failed to run task")
+		return
 	}
 }
 
@@ -59,31 +78,4 @@ func handleError(err error, msg string) {
 	}
 
 	os.Exit(1)
-}
-
-const selectTaskNameCommand = `
-  task -l --sort none \
-    | tail -n +2 \
-    | peco \
-    | sed -E 's/^\* ([^ ]+):.*/\1/' \
-    | sed -E 's/:$//'
-`
-
-func selectTaskName() (string, error) {
-	cmd := exec.Command("sh", "-c", selectTaskNameCommand)
-	output, err := cmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("cmd.Output: %w", err)
-	}
-
-	return strings.TrimSpace(string(output)), nil
-}
-
-func readFile(path string) ([]byte, error) {
-	file, err := os.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("os.ReadFile: %w", err)
-	}
-
-	return file, nil
 }

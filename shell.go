@@ -1,0 +1,64 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"os/exec"
+	"strings"
+)
+
+const selectTaskNameCommand = `
+  task -t %s -l --sort none \
+    | tail -n +2 \
+    | peco \
+    | sed -E 's/^\* ([^ ]+):.*/\1/' \
+    | sed -E 's/:$//'
+`
+
+func selectTaskName(taskfile string) (string, error) {
+	script := fmt.Sprintf(selectTaskNameCommand, taskfile)
+	cmd := exec.Command("sh", "-c", script)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("cmd.Output: %w", err)
+	}
+
+	return strings.TrimSpace(string(output)), nil
+}
+
+func readFile(path string) ([]byte, error) {
+	file, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("os.ReadFile: %w", err)
+	}
+
+	return file, nil
+}
+
+func readInput(prompt string) string {
+	fmt.Printf("%s: ", prompt)
+
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		return scanner.Text()
+	}
+
+	return ""
+}
+
+func runTask(taskfile string, name string, args ...string) error {
+	fmt.Printf("run: task -t %s %s %s\n", taskfile, name, strings.Join(args, " "))
+
+	cmdArgs := append([]string{"-t", taskfile, name}, args...)
+	cmd := exec.Command("task", cmdArgs...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("cmd.Run: %w", err)
+	}
+
+	return nil
+}

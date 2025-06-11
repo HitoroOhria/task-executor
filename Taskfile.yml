@@ -1,5 +1,7 @@
 version: "3"
 
+vars:
+  GLOBAL: "GLOBAL"
 
 tasks:
   default:
@@ -10,7 +12,16 @@ tasks:
   run:
     desc: Run go program
     cmds:
-      - go run ./...
+      - go run ./... -taskfile="{{.TASKFILE}}"
+    vars:
+      TASKFILE: "{{.TASKFILE}}"
+
+  run:test:
+    desc: Run go program for debug
+    cmds:
+      - task: run
+        vars:
+          TASKFILE: "Taskfile.test.yml"
 
   fmt:
     desc: Format go program

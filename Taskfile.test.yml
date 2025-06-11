@@ -1,0 +1,39 @@
+version: "3"
+
+vars:
+  GLOBAL: "GLOBAL"
+
+tasks:
+  simple:
+    desc: Simple command
+    cmds:
+      - echo "run simple command"
+
+  with-vars:
+    desc: Command with vars
+    silent: true
+    cmds:
+      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}}"
+    vars:
+      OPTIONAL1: "{{.OPTIONAL1}}"
+      VALUE: "bar"
+
+  with-requires:
+    desc: Command with requires
+    silent: true
+    cmds:
+      - echo "REQUIRED={{.REQUIRED}}"
+    requires:
+      vars: [ REQUIRED ]
+
+  with-vars-and-requires:
+    desc: Command with vars and requires
+    silent: true
+    cmds:
+      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}}"
+      - echo "REQUIRED={{.REQUIRED}}"
+    vars:
+      OPTIONAL1: "{{.OPTIONAL1}}"
+      VALUE: "bar"
+    requires:
+      vars: [ REQUIRED ]
