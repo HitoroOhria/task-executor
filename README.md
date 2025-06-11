@@ -7,7 +7,7 @@
 $ task run
 task: [run] go run ./... -taskfile=Taskfile.test.yml
 
-# incremental search
+# select task
 QUERY>
  simple:                                    Simple command
  with-vars:                                 Command with vars
@@ -15,7 +15,8 @@ QUERY>
  with-vars-and-requires:                    Command with vars and requires
  with-vars-and-requires-and-long-var:       Command with vars and requires and long var
 
-# select with-vars-and-requires
+# e.g. selectd with-vars-and-requires
+# input variable value and execute task
 Enter "REQUIRED"  (required): foo
 Enter "OPTIONAL1" (optional): bar
 run: task -t Taskfile.test.yml with-vars-and-requires REQUIRED="foo" OPTIONAL1="bar"
