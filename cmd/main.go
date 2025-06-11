@@ -44,22 +44,21 @@ func main() {
 			continue
 		}
 
-		if task.Vars != nil {
-			for varName, variable := range task.Vars.All() {
-				if VarIsSpecifiable(varName, variable) {
-					value := readInput(varName)
-					vars.SetOptional(varName, value)
-				}
-			}
-		}
-
 		if task.Requires != nil {
 			for _, variable := range task.Requires.Vars {
-				value := readInput(variable.Name)
+				value := readRequiredInput(variable.Name)
 				err = vars.SetRequired(variable.Name, value)
 				if err != nil {
 					handleError(err, "failed to set required variable")
 					return
+				}
+			}
+		}
+		if task.Vars != nil {
+			for varName, variable := range task.Vars.All() {
+				if VarIsSpecifiable(varName, variable) {
+					value := readOptionalInput(varName)
+					vars.SetOptional(varName, value)
 				}
 			}
 		}

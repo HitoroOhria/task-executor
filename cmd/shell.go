@@ -40,8 +40,21 @@ func readFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-func readInput(prompt string) string {
-	fmt.Printf("%s: ", prompt)
+func readOptionalInput(prompt string) string {
+	return readInput(prompt, false)
+}
+
+func readRequiredInput(prompt string) string {
+	return readInput(prompt, true)
+}
+
+func readInput(prompt string, required bool) string {
+	necessity := "optional"
+	if required {
+		necessity = "required"
+	}
+
+	fmt.Printf(`Enter var "%s" (%s): `, prompt, necessity)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
