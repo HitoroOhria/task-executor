@@ -2,7 +2,7 @@ package model
 
 import "testing"
 
-func TestVarValue_IsSelfValueWithDefault(t *testing.T) {
+func TestVarValue_IsOptionalWithDefault(t *testing.T) {
 	type args struct {
 		name string
 	}
@@ -97,8 +97,8 @@ func TestVarValue_IsSelfValueWithDefault(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.IsSelfValueWithDefault(tt.args.name); got != tt.want {
-				t.Errorf("IsSelfValueWithDefault() = %v, want %v", got, tt.want)
+			if got := tt.v.IsOptionalWithDefault(tt.args.name); got != tt.want {
+				t.Errorf("IsOptionalWithDefault() = %v, want %v", got, tt.want)
 			}
 		})
 	}

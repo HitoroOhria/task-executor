@@ -44,7 +44,7 @@ func (v *OptionalVar) IsInputtable() bool {
 	if v.Value.IsSelfValue(v.Name) {
 		return true
 	}
-	if v.Value.IsSelfValueWithDefault(v.Name) {
+	if v.Value.IsOptionalWithDefault(v.Name) {
 		return true
 	}
 

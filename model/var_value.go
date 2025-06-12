@@ -29,12 +29,13 @@ func (v VarValue) selfValue(name string) string {
 	return fmt.Sprintf("{{.%s}}", name)
 }
 
-func (v VarValue) IsSelfValueWithDefault(name string) bool {
-	re := v.selfWithDefaultRegex(name)
-	return re.MatchString(string(v))
-}
+func (v VarValue) IsOptionalWithDefault(name string) bool {
+	escapedName := regexp.QuoteMeta(name)
 
-func (v VarValue) selfWithDefaultRegex(name string) *regexp.Regexp {
-	re := fmt.Sprintf(`\.%s ?| ?default .+`, v.selfValue(name))
-	return regexp.MustCompile(re)
+	pipePattern := fmt.Sprintf(`\{\{\s*\.%s\s*\|\s*default\s+.+?\s*\}\}`, escapedName)
+	prefixPattern := fmt.Sprintf(`\{\{\s*default\s+.+?\s+\.%s\s*\}\}`, escapedName)
+	fullPattern := fmt.Sprintf(`^(?:%s|%s)$`, pipePattern, prefixPattern)
+
+	regex := regexp.MustCompile(fullPattern)
+	return regex.MatchString(string(v))
 }
