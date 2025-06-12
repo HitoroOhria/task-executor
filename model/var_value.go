@@ -35,6 +35,6 @@ func (v VarValue) IsSelfValueWithDefault(name string) bool {
 }
 
 func (v VarValue) selfWithDefaultRegex(name string) *regexp.Regexp {
-	re := fmt.Sprintf(`%s ?| default ".+"`, v.selfValue(name))
+	re := fmt.Sprintf(`\.%s ?| ?default .+`, v.selfValue(name))
 	return regexp.MustCompile(re)
 }

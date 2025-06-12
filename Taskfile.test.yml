@@ -18,6 +18,17 @@ tasks:
       OPTIONAL: "{{.OPTIONAL}}"
       VALUE: "bar"
 
+  with-default-vars:
+    desc: Command with vars
+    silent: true
+    cmds:
+      - echo "DEFAULT1={{.DEFAULT1}} DEFAULT2={{.DEFAULT2}} DEFAULT3={{.DEFAULT3}} DEFAULT4={{.DEFAULT4}}"
+    vars:
+      DEFAULT1: '{{.DEFAULT1 | default "default1"}}'
+      DEFAULT2: '{{ .DEFAULT2 | default "default2" }}'
+      DEFAULT3: '{{.DEFAULT3|default "default3"}}'
+      DEFAULT4: '{{ .DEFAULT4|default "default4" }}'
+
   with-requires:
     desc: Command with requires
     silent: true
