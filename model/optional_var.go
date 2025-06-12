@@ -35,8 +35,13 @@ func (v *OptionalVar) MustInputValue() string {
 	return *v.InputValue
 }
 
-func (v *OptionalVar) Arg() string {
-	return fmt.Sprintf(`%s="%s"`, v.Name, v.MustInputValue())
+func (v *OptionalVar) Arg() *string {
+	if v.InputValue == nil || *v.InputValue == "" {
+		return nil
+	}
+
+	arg := fmt.Sprintf(`%s="%s"`, v.Name, v.MustInputValue())
+	return &arg
 }
 
 // IsInputtable は変数の値が入力可能かを判定する

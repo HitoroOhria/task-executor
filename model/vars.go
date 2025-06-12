@@ -86,7 +86,12 @@ func (vs *Vars) CommandArgs() []string {
 		args = append(args, r.Arg())
 	}
 	for _, o := range vs.InputtableOptVars() {
-		args = append(args, o.Arg())
+		arg := o.Arg()
+		if arg == nil {
+			continue
+		}
+
+		args = append(args, *arg)
 	}
 
 	return args
