@@ -52,19 +52,21 @@ func (vs *Vars) Input() error {
 
 	if len(vs.Requires) != 0 {
 		fmt.Println("\033[35m--- required ---\033[0m") // マゼンダ色
-	}
-	for _, r := range vs.Requires {
-		err := r.Input(vs.GetMaxNameLen())
-		if err != nil {
-			return fmt.Errorf("r.Input: %w", err)
+
+		for _, r := range vs.Requires {
+			err := r.Input(vs.GetMaxNameLen())
+			if err != nil {
+				return fmt.Errorf("r.Input: %w", err)
+			}
 		}
 	}
 
 	if len(vs.InputtableOptVars()) != 0 {
 		fmt.Println("\033[36m--- optional ---\033[0m") // シアン色
-	}
-	for _, o := range vs.InputtableOptVars() {
-		o.Input(vs.GetMaxNameLen())
+
+		for _, o := range vs.InputtableOptVars() {
+			o.Input(vs.GetMaxNameLen())
+		}
 	}
 
 	fmt.Println("---   end   ---")
