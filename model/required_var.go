@@ -25,7 +25,7 @@ func NewRequiredVar(v *ast.VarsWithValidation) *RequiredVar {
 
 func (v *RequiredVar) MustInputValue() string {
 	if v.InputValue == nil {
-		panic("required var value is not set")
+		panic(fmt.Sprintf("input value is not set: %s", v.Name))
 	}
 
 	return *v.InputValue

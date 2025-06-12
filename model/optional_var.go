@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"regexp"
 
 	"github.com/go-task/task/v3/taskfile/ast"
 )
@@ -12,20 +11,12 @@ type OptionalVar struct {
 	inputter *Inputter
 
 	Name       string
-	Value      string
+	Value      VarValue
 	InputValue *string
 }
 
 func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
-	value := ""
-	switch v.Value.(type) {
-	case string:
-		value = v.Value.(string)
-	case *string:
-		value = *v.Value.(*string)
-	default:
-		fmt.Printf("unknown var value type: type = %T. value = %+v\n", v.Value, v.Value)
-	}
+	value := NewVarValue(v.Value)
 
 	return &OptionalVar{
 		v:          v,
@@ -38,7 +29,7 @@ func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
 
 func (v *OptionalVar) MustInputValue() string {
 	if v.InputValue == nil {
-		panic("required var value is not set")
+		panic(fmt.Sprintf("input value is not set: %s", v.Name))
 	}
 
 	return *v.InputValue
@@ -48,21 +39,12 @@ func (v *OptionalVar) Arg() string {
 	return fmt.Sprintf(`%s="%s"`, v.Name, v.MustInputValue())
 }
 
-func (v *OptionalVar) SelfValue() string {
-	return fmt.Sprintf("{{.%s}}", v.Name)
-}
-
-func (v *OptionalVar) SelfWithDefaultRegex() *regexp.Regexp {
-	re := fmt.Sprintf(`%s ?| default ".+"`, v.SelfValue())
-	return regexp.MustCompile(re)
-}
-
 // IsInputtable は変数の値が入力可能かを判定する
 func (v *OptionalVar) IsInputtable() bool {
-	if v.Value == v.SelfValue() {
+	if v.Value.IsSelfValue(v.Name) {
 		return true
 	}
-	if v.SelfWithDefaultRegex().MatchString(v.Value) {
+	if v.Value.IsSelfValueWithDefault(v.Name) {
 		return true
 	}
 
