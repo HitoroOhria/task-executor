@@ -19,7 +19,7 @@ tasks:
     cmds:
       - go run ./cmd -taskfile={{.TF}}
     vars:
-      TF: '{{.TF| default "Taskfile.test.yml"}}'
+      TF: '{{.TF | default "Taskfile.test.yml"}}'
 
   fmt:
     desc: Format go program

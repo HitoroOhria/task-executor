@@ -1,7 +1,7 @@
 # task-executer
 
 [Task](https://taskfile.dev/) のタスクをインクリメンタルサーチで実行する。
-タスクの変数がある場合、その変数の値を指定可能である。
+タスクの変数がある場合、その変数の値を指定することができる。
 
 ```shell
 $ task run
@@ -37,12 +37,14 @@ DEFAULT2=default-base
 
 ```shell
 $ task build
+
 $ ./main
+$ ./main -taskfile="Taskfile.another.yml"
 ```
 
 Taskfile 経由で実行する。
 
 ```shell
-$ task run TF="Taskfile.yml"
+$ task run
+$ task run TF="Taskfile.another.yml"
 ```
-
