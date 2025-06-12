@@ -30,7 +30,7 @@ var (
 	}
 
 	ErrSpecifiedTaskfileNotFound = errors.New("specifiled taskfile not found")
-	ErrSelectedTaskfileNotFound  = errors.New("selected taskfile not found")
+	ErrCanceledIncrementalSearch = errors.New("canceled incremental search")
 )
 
 func findFileByName(name string) (string, error) {
@@ -100,7 +100,7 @@ func selectTaskName(taskfile string) (string, error) {
 	o := strings.TrimSpace(string(output))
 	// インクリメンタルサーチ中に Ctrl + C で中断された場合は、特定のエラーを返す
 	if o == "" {
-		return "", ErrSelectedTaskfileNotFound
+		return "", ErrCanceledIncrementalSearch
 	}
 
 	return o, nil

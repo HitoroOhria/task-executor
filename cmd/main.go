@@ -36,7 +36,7 @@ func main() {
 			return
 		}
 		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
-		if errors.Is(err, ErrSelectedTaskfileNotFound) {
+		if errors.Is(err, ErrCanceledIncrementalSearch) {
 			os.Exit(0)
 			return
 		}
