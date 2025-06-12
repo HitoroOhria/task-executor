@@ -66,8 +66,15 @@ func findFileByName(name string) (string, error) {
 func findTaskfileName() (string, error) {
 	taskfileName := ""
 	for _, taskfile := range searchTaskfiles {
-		// 期待するファイル名をループ探索しているので、ファイルが見つからないエラーを抑制する
-		found, _ := findFileByName(taskfile)
+		found, err := findFileByName(taskfile)
+		if err != nil {
+			// 期待するファイル名をループ探索しているので、ファイルが見つからなくてもスルーする
+			if errors.Is(err, ErrSpecifiedTaskfileNotFound) {
+				continue
+			}
+
+			return "", fmt.Errorf("findFileByName: %w", err)
+		}
 		if found == "" {
 			continue
 		}
