@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+const maxVarPromptWidth = 18
+
 var inputter *Inputter
 
 type Inputter struct {
@@ -27,6 +29,9 @@ func (i *Inputter) Prompt(required bool, maxNameLen int, varName string) string 
 	}
 
 	pad := maxNameLen + 2 // plus double quote
+	if pad > maxVarPromptWidth {
+		pad = maxVarPromptWidth
+	}
 	name := fmt.Sprintf(`"%s"`, varName)
 
 	return fmt.Sprintf(`Enter %-*s (%s): `, pad, name, necessity)
