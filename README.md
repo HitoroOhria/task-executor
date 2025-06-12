@@ -5,23 +5,30 @@
 
 ```shell
 $ task run
-task: [run] go run ./... -taskfile=Taskfile.test.yml
+task: [run] go run ./cmd -taskfile=Taskfile.test.yml
 
 # select task
 QUERY>
- simple:                                    Simple command
- with-vars:                                 Command with vars
- with-requires:                             Command with requires
- with-vars-and-requires:                    Command with vars and requires
- with-vars-and-requires-and-long-var:       Command with vars and requires and long var
+ simple:                  Simple command                                                                                                                                                                                                                   
+ with-vars:               Command with vars
+ with-default-vars:       Command with default vars
+ with-requires:           Command with requires
+ with-long-vars:          Command with long vars
+ with-all:                Command with all pattern
 
-# e.g. selectd with-vars-and-requires
-# input variable value and execute task
-Enter "REQUIRED"  (required): foo
-Enter "OPTIONAL1" (optional): bar
-run: task -t Taskfile.test.yml with-vars-and-requires REQUIRED="foo" OPTIONAL1="bar"
-OPTIONAL1=bar VALUE=bar
+# select with-all
+Enter "REQUIRED"         (required): foo
+Enter "OPTIONAL1"        (optional): bar
+Enter "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2" (optional): baz
+Enter "DEFAULT1"         (optional): 
+Enter "DEFAULT2"         (optional): 
+run: task -t Taskfile.test.yml with-all REQUIRED="foo" OPTIONAL1="bar" LOOOOOOOOOOOOOOOOOONG_OPTIONAL2="baz"
+VALUE=bar
+OPTIONAL1=bar
+LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=baz
 REQUIRED=foo
+DEFAULT1=default1
+DEFAULT2=default-base
 ```
 
 ### 実行方法
