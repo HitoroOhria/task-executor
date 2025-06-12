@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"fmt"
@@ -15,11 +15,9 @@ type RequiredVar struct {
 }
 
 func NewRequiredVar(v *ast.VarsWithValidation) *RequiredVar {
-	i := NewInputter()
-
 	return &RequiredVar{
 		v:          v,
-		inputter:   i,
+		inputter:   inputter,
 		Name:       v.Name,
 		InputValue: nil,
 	}

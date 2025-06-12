@@ -6,8 +6,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
+
+func init() {
+	model.SetInputter(readInput)
+}
 
 func getArgs() string {
 	taskfileName := flag.String("taskfile", "", "Taskfile name.")
@@ -51,7 +56,7 @@ func main() {
 		return
 	}
 
-	tf, err := NewTaskfile(taskfileName, file)
+	tf, err := model.NewTaskfile(taskfileName, file)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return

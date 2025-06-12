@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"fmt"
@@ -17,8 +17,6 @@ type OptionalVar struct {
 }
 
 func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
-	i := NewInputter()
-
 	value := ""
 	switch v.Value.(type) {
 	case string:
@@ -31,7 +29,7 @@ func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
 
 	return &OptionalVar{
 		v:          v,
-		inputter:   i,
+		inputter:   inputter,
 		Name:       name,
 		Value:      value,
 		InputValue: nil,

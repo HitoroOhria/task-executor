@@ -1,12 +1,23 @@
-package main
+package model
 
-import "fmt"
+import (
+	"fmt"
+)
+
+var inputter *Inputter
 
 type Inputter struct {
+	readInput func() string
 }
 
-func NewInputter() *Inputter {
-	return &Inputter{}
+func NewInputter(readInput func() string) *Inputter {
+	return &Inputter{
+		readInput: readInput,
+	}
+}
+
+func SetInputter(readInput func() string) {
+	inputter = NewInputter(readInput)
 }
 
 func (i *Inputter) Prompt(required bool, maxNameLen int, varName string) string {
@@ -23,5 +34,5 @@ func (i *Inputter) Prompt(required bool, maxNameLen int, varName string) string 
 
 func (i *Inputter) Input(prompt string) string {
 	fmt.Print(prompt)
-	return readInput()
+	return i.readInput()
 }
