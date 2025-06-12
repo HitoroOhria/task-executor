@@ -1,108 +1,93 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-task/task/v3/taskfile/ast"
+)
 
 // Vars は変数名と値のセット
-type Vars []*Var
+type Vars struct {
+	Requires  []*RequiredVar
+	Optionals []*OptionalVar
+}
 
-func (vs *Vars) FindByName(name string) *Var {
-	for _, v := range *vs {
-		if v.Name == name {
-			return v
+func NewVars(t *ast.Task) *Vars {
+	rvs := make([]*RequiredVar, 0)
+	if t.Requires != nil {
+		for _, v := range t.Requires.Vars {
+			rvs = append(rvs, NewRequiredVar(v))
 		}
+	}
+
+	ovs := make([]*OptionalVar, 0)
+	if t.Vars != nil {
+		for name, v := range t.Vars.All() {
+			ovs = append(ovs, NewOptionalVar(name, &v))
+		}
+	}
+
+	return &Vars{
+		Requires:  rvs,
+		Optionals: ovs,
+	}
+}
+
+// InputtableOptVars は入力可能はオプショナル変数を返す
+func (vs *Vars) InputtableOptVars() []*OptionalVar {
+	ovs := make([]*OptionalVar, 0, len(vs.Optionals))
+	for _, ov := range vs.Optionals {
+		if ov.IsInputtable() {
+			ovs = append(ovs, ov)
+		}
+	}
+
+	return ovs
+}
+
+func (vs *Vars) Input() error {
+	for _, r := range vs.Requires {
+		err := r.Input(vs.GetMaxNameLen())
+		if err != nil {
+			return fmt.Errorf("r.Input: %w", err)
+		}
+	}
+
+	for _, o := range vs.InputtableOptVars() {
+		o.Input(vs.GetMaxNameLen())
 	}
 
 	return nil
 }
 
-func (vs *Vars) Append(v *Var) {
-	*vs = append(*vs, v)
-}
-
-func (vs *Vars) SetValue(name, value string) error {
-	v := vs.FindByName(name)
-	if v == nil {
-		return fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
-	}
-
-	return v.SetValue(value)
-}
-
 func (vs *Vars) GetMaxNameLen() int {
 	maxLen := 0
-	for _, v := range *vs {
-		if len(v.Name) > maxLen {
-			maxLen = len(v.Name)
+
+	for _, r := range vs.Requires {
+		if len(r.Name) > maxLen {
+			maxLen = len(r.Name)
+		}
+	}
+	for _, o := range vs.InputtableOptVars() {
+		if len(o.Name) > maxLen {
+			maxLen = len(o.Name)
 		}
 	}
 
 	return maxLen
 }
 
-func (vs *Vars) GetInputPrompt(name string) (string, error) {
-	v := vs.FindByName(name)
-	if v == nil {
-		return "", fmt.Errorf("variable %s is not found. vs = %+v", name, *vs)
-	}
-
-	maxLen := vs.GetMaxNameLen()
-	return v.GetInputPrompt(maxLen), nil
-}
-
 // CommandArgs はコマンドの引数を組み立てる
 // e.g. { "NAME": "john", "age": "25" } => [NAME="john", age="25"]
 func (vs *Vars) CommandArgs() []string {
-	args := make([]string, 0, len(*vs))
-	for _, v := range *vs {
-		arg := fmt.Sprintf(`%s="%s"`, v.Name, v.Value)
-		args = append(args, arg)
+	args := make([]string, 0)
+
+	for _, r := range vs.Requires {
+		args = append(args, r.Arg())
+	}
+	for _, o := range vs.InputtableOptVars() {
+		args = append(args, o.Arg())
 	}
 
 	return args
-}
-
-type Var struct {
-	Required bool
-	Name     string
-	Value    string
-}
-
-func CreateRequiredVar(name string) *Var {
-	return &Var{
-		Required: true,
-		Name:     name,
-		Value:    "",
-	}
-}
-
-func CreateOptionalVar(name string) *Var {
-	return &Var{
-		Required: false,
-		Name:     name,
-		Value:    "",
-	}
-}
-
-func (v *Var) SetValue(value string) error {
-	if v.Required {
-		if value == "" {
-			return fmt.Errorf("variable %s is required", v.Name)
-		}
-	}
-
-	v.Value = value
-	return nil
-}
-
-func (v *Var) GetInputPrompt(padding int) string {
-	necessity := "optional"
-	if v.Required {
-		necessity = "required"
-	}
-
-	pad := padding + 2 // plus double quote
-	varName := fmt.Sprintf(`"%s"`, v.Name)
-
-	return fmt.Sprintf(`Enter %-*s (%s): `, pad, varName, necessity)
-
 }

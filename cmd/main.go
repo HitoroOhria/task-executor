@@ -51,66 +51,26 @@ func main() {
 		return
 	}
 
-	tf, err := NewTaskfile(file)
+	tf, err := NewTaskfile(taskfileName, file)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return
 	}
 
-	// タスクの変数を収集
-	vars := make(Vars, 0)
-	for name, task := range tf.Tasks.All(NoSort) {
-		if name != taskName {
-			continue
-		}
-
-		if task.Requires != nil {
-			for _, v := range task.Requires.Vars {
-				vars.Append(CreateRequiredVar(v.Name))
-			}
-		}
-		if task.Vars != nil {
-			for varName, variable := range task.Vars.All() {
-				if VarIsSpecifiable(varName, variable) {
-					vars.Append(CreateOptionalVar(varName))
-				}
-			}
-		}
+	task := tf.Tasks.FindByName(taskName)
+	if task == nil {
+		handleError(fmt.Errorf("task '%s' not found", taskName), "failed to find task")
+		return
 	}
 
-	// タスクの変数の値を入力
-	for _, v := range vars {
-		if v.Required {
-			prompt, err := vars.GetInputPrompt(v.Name)
-			if err != nil {
-				handleError(err, "failed to get input prompt")
-				return
-			}
-			value := readInputValue(prompt)
-			err = vars.SetValue(v.Name, value)
-			if err != nil {
-				handleError(err, "failed to set value")
-				return
-			}
-
-			continue
-		}
-
-		prompt, err := vars.GetInputPrompt(v.Name)
-		if err != nil {
-			handleError(err, "failed to get input prompt")
-			return
-		}
-		value := readInputValue(prompt)
-		err = vars.SetValue(v.Name, value)
-		if err != nil {
-			handleError(err, "failed to set value")
-			return
-		}
+	err = task.Vars.Input()
+	if err != nil {
+		handleError(err, "failed to input vars")
+		return
 	}
 
 	// タスクを実行
-	err = runTask(taskfileName, taskName, vars.CommandArgs()...)
+	err = runTask(tf.Name, task.Name, task.CommandArgs()...)
 	if err != nil {
 		handleError(err, "failed to run task")
 		return

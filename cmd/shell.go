@@ -122,11 +122,6 @@ func readFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-func readInputValue(prompt string) string {
-	fmt.Print(prompt)
-	return readInput()
-}
-
 // readInput は値の入力を受け付ける
 // Ctrl + C でキャンセルされた場合は、プログラムを正常終了する
 // FIXME context & goroutine を使用した方法もあるので、検討する
