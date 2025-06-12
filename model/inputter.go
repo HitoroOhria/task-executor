@@ -22,19 +22,14 @@ func SetInputter(readInput func() string) {
 	inputter = NewInputter(readInput)
 }
 
-func (i *Inputter) Prompt(required bool, maxNameLen int, varName string) string {
-	necessity := "optional"
-	if required {
-		necessity = "required"
-	}
-
+func (i *Inputter) Prompt(maxNameLen int, varName string) string {
 	pad := maxNameLen + 2 // plus double quote
 	if pad > maxVarPromptWidth {
 		pad = maxVarPromptWidth
 	}
 	name := fmt.Sprintf(`"%s"`, varName)
 
-	return fmt.Sprintf(`Enter %-*s (%s): `, pad, name, necessity)
+	return fmt.Sprintf(`Enter %-*s: `, pad, name)
 }
 
 func (i *Inputter) Input(prompt string) string {

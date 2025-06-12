@@ -57,7 +57,7 @@ func (v *OptionalVar) IsInputtable() bool {
 }
 
 func (v *OptionalVar) Input(maxNameLen int) {
-	prompt := v.inputter.Prompt(false, maxNameLen, v.Name)
+	prompt := v.inputter.Prompt(maxNameLen, v.Name)
 	value := v.inputter.Input(prompt)
 
 	v.InputValue = &value

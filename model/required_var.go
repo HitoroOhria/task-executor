@@ -36,7 +36,7 @@ func (v *RequiredVar) Arg() string {
 }
 
 func (v *RequiredVar) Input(maxNameLen int) error {
-	prompt := v.inputter.Prompt(true, maxNameLen, v.Name)
+	prompt := v.inputter.Prompt(maxNameLen, v.Name)
 	value := v.inputter.Input(prompt)
 
 	if value == "" {

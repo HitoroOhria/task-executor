@@ -18,11 +18,14 @@ QUERY>
  with-all:                Command with all pattern
 
 # select with-all
+--- required ---
 Enter "REQUIRED"         (required): foo
+--- optional ---
 Enter "OPTIONAL1"        (optional): bar
 Enter "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2" (optional): baz
 Enter "DEFAULT1"         (optional): 
 Enter "DEFAULT2"         (optional): 
+---   end   ---
 run: task -t Taskfile.test.yml with-all REQUIRED="foo" OPTIONAL1="bar" LOOOOOOOOOOOOOOOOOONG_OPTIONAL2="baz"
 VALUE=value
 OPTIONAL1=bar
