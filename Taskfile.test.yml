@@ -13,9 +13,9 @@ tasks:
     desc: Command with vars
     silent: true
     cmds:
-      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}}"
+      - echo "OPTIONAL={{.OPTIONAL}} VALUE={{.VALUE}}"
     vars:
-      OPTIONAL1: "{{.OPTIONAL1}}"
+      OPTIONAL: "{{.OPTIONAL}}"
       VALUE: "bar"
 
   with-requires:
@@ -30,10 +30,10 @@ tasks:
     desc: Command with vars and requires
     silent: true
     cmds:
-      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}}"
+      - echo "OPTIONAL={{.OPTIONAL}} VALUE={{.VALUE}}"
       - echo "REQUIRED={{.REQUIRED}}"
     vars:
-      OPTIONAL1: "{{.OPTIONAL1}}"
+      OPTIONAL: "{{.OPTIONAL}}"
       VALUE: "bar"
     requires:
       vars: [ REQUIRED ]
@@ -42,10 +42,10 @@ tasks:
     desc: Command with vars and requires and long var
     silent: true
     cmds:
-      - echo "OPTIONAL1={{.OPTIONAL1}} VALUE={{.VALUE}} LOOOOOOOOOOOOOOOOOONG_OPTIONAL2={{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
+      - echo "OPTIONAL={{.OPTIONAL}} VALUE={{.VALUE}} LOOOOOOOOOOOOOOOOOONG_OPTIONAL2={{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
       - echo "REQUIRED={{.REQUIRED}}"
     vars:
-      OPTIONAL1: "{{.OPTIONAL1}}"
+      OPTIONAL: "{{.OPTIONAL}}"
       VALUE: "bar"
       LOOOOOOOOOOOOOOOOOONG_OPTIONAL2: "{{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
     requires:
