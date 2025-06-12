@@ -41,7 +41,7 @@ func (v *OptionalVar) Arg() string {
 
 // IsInputtable は変数の値が入力可能かを判定する
 func (v *OptionalVar) IsInputtable() bool {
-	if v.Value.IsSelfValue(v.Name) {
+	if v.Value.IsOptional(v.Name) {
 		return true
 	}
 	if v.Value.IsOptionalWithDefault(v.Name) {

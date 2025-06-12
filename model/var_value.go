@@ -21,12 +21,12 @@ func NewVarValue(value any) VarValue {
 	return VarValue(v)
 }
 
-func (v VarValue) IsSelfValue(name string) bool {
-	return string(v) == v.selfValue(name)
-}
+func (v VarValue) IsOptional(name string) bool {
+	escapedName := regexp.QuoteMeta(name)
+	pattern := fmt.Sprintf(`\{\{\s*\.%s\s*\}\}`, escapedName)
 
-func (v VarValue) selfValue(name string) string {
-	return fmt.Sprintf("{{.%s}}", name)
+	regex := regexp.MustCompile(pattern)
+	return regex.MatchString(string(v))
 }
 
 func (v VarValue) IsOptionalWithDefault(name string) bool {
