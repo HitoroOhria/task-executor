@@ -12,12 +12,12 @@ tasks:
   build:
     desc: Build go program
     cmds:
-      - go build -o main ./...
+      - go build -o main ./cmd
 
   run:
     desc: Run go program
     cmds:
-      - go run ./... -taskfile={{.TF}}
+      - go run ./cmd -taskfile={{.TF}}
     vars:
       TF: '{{.TF| default "Taskfile.test.yml"}}'
 
