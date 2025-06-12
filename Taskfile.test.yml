@@ -14,6 +14,14 @@ tasks:
     desc: Command with vars
     silent: true
     cmds:
+      - echo "VALUE={{.VALUE}}"
+    vars:
+      VALUE: "value"
+
+  with-optional-vars:
+    desc: Command with optional vars
+    silent: true
+    cmds:
       - echo "OPTIONAL={{.OPTIONAL}}"
     vars:
       OPTIONAL: "{{.OPTIONAL}}"
@@ -57,7 +65,7 @@ tasks:
       - echo "DEFAULT1={{.DEFAULT1}}"
       - echo "DEFAULT2={{.DEFAULT2}}"
     vars:
-      VALUE: "bar"
+      VALUE: "value"
       OPTIONAL1: "{{.OPTIONAL1}}"
       LOOOOOOOOOOOOOOOOOONG_OPTIONAL2: "{{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
       DEFAULT1: '{{.DEFAULT1 | default "default1"}}'

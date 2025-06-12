@@ -11,6 +11,7 @@ task: [run] go run ./cmd -taskfile=Taskfile.test.yml
 QUERY>
  simple:                  Simple command                                                                                                                                                                                                                   
  with-vars:               Command with vars
+ with-optional-vars:      Command with optional vars
  with-default-vars:       Command with default vars
  with-requires:           Command with requires
  with-long-vars:          Command with long vars
@@ -23,7 +24,7 @@ Enter "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2" (optional): baz
 Enter "DEFAULT1"         (optional): 
 Enter "DEFAULT2"         (optional): 
 run: task -t Taskfile.test.yml with-all REQUIRED="foo" OPTIONAL1="bar" LOOOOOOOOOOOOOOOOOONG_OPTIONAL2="baz"
-VALUE=bar
+VALUE=value
 OPTIONAL1=bar
 LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=baz
 REQUIRED=foo
