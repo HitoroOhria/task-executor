@@ -38,21 +38,21 @@ DEFAULT2=default-base
 
 ```shell
 $ task build
-
 $ ./main
-$ ./main -taskfile="Taskfile.another.yml"
 ```
+
+### 動作確認方法
 
 Taskfile 経由で実行する。
 
 ```shell
 $ task run
-$ task run TF="Taskfile.another.yml"
 ```
 
 ## Features
 
 - [x] 必須な変数を入力できるようにする
 - [x] デフォルト値付きのオプショナルな変数を入力できるようにする
+- [ ] 入力プロンプトにデフォルト値の値を入力する
 - [ ] 依存先のタスクの変数も入力できるようにする
 - [ ] include した Taskfile に対応する
