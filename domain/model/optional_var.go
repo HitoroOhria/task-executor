@@ -3,12 +3,13 @@ package model
 import (
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type OptionalVar struct {
 	v    *ast.Var
-	deps *Deps
+	deps *console.Deps
 
 	Name       string
 	Value      VarValue
@@ -16,7 +17,7 @@ type OptionalVar struct {
 	InputValue *string
 }
 
-func NewOptionalVar(name string, v *ast.Var, deps *Deps) *OptionalVar {
+func NewOptionalVar(name string, v *ast.Var, deps *console.Deps) *OptionalVar {
 	value := NewVarValue(v.Value)
 	prompt := NewPrompt(name)
 

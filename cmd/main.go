@@ -7,15 +7,16 @@ import (
 	"os"
 
 	"github.com/HitoroOhria/task-executer/adapter"
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/HitoroOhria/task-executer/domain/model"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/go-task/task/v3/errors"
 )
 
-var deps *model.Deps
+var deps *console.Deps
 
 func init() {
-	deps = model.NewDeps(
+	deps = console.NewDeps(
 		adapter.NewCommand(),
 		adapter.NewPrinter(),
 	)

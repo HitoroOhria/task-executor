@@ -3,18 +3,19 @@ package model
 import (
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 // Vars は変数名と値のセット
 type Vars struct {
-	deps *Deps
+	deps *console.Deps
 
 	Requires  []*RequiredVar
 	Optionals []*OptionalVar
 }
 
-func NewVars(t *ast.Task, deps *Deps) *Vars {
+func NewVars(t *ast.Task, deps *console.Deps) *Vars {
 	rvs := make([]*RequiredVar, 0)
 	if t.Requires != nil {
 		for _, v := range t.Requires.Vars {

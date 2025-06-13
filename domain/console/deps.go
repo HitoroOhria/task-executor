@@ -1,4 +1,4 @@
-package model
+package console
 
 type Deps struct {
 	Command Command

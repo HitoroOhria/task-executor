@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/HitoroOhria/task-executer/domain/model"
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/fatih/color"
 )
@@ -17,7 +17,7 @@ const (
 
 type PrinterImpl struct{}
 
-func NewPrinter() model.Printer {
+func NewPrinter() console.Printer {
 	return &PrinterImpl{}
 }
 

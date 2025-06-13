@@ -3,7 +3,7 @@ package adapter
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/domain/model"
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/HitoroOhria/task-executer/io"
 )
@@ -15,7 +15,7 @@ type CommandImpl struct {
 	runTask        func(taskfile string, name string, args ...string) error
 }
 
-func NewCommand() model.Command {
+func NewCommand() console.Command {
 	return &CommandImpl{}
 }
 

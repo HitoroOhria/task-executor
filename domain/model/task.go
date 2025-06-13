@@ -1,13 +1,14 @@
 package model
 
 import (
+	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type Task struct {
 	t    *ast.Task
-	deps *Deps
+	deps *console.Deps
 
 	Name     value.TaskName
 	FullName value.FullTaskName
@@ -15,7 +16,7 @@ type Task struct {
 	Selected bool
 }
 
-func NewTask(t *ast.Task, includeNames []string, deps *Deps) *Task {
+func NewTask(t *ast.Task, includeNames []string, deps *console.Deps) *Task {
 	name := value.NewTaskName(t.Name())
 	fullName := value.NewFullTaskNameForIncluded(includeNames, t.Name())
 	vs := NewVars(t, deps)

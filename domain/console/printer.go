@@ -1,6 +1,6 @@
-//go:generate mockgen -source=printer.go -destination=mock/printer.go -package=mock_model
+//go:generate mockgen -source=printer.go -destination=mock/printer.go -package=mock_console
 
-package model
+package console
 
 import "github.com/HitoroOhria/task-executer/domain/value"
 
