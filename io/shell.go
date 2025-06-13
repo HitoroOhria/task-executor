@@ -12,7 +12,10 @@ import (
 	"github.com/go-task/task/v3/errors"
 )
 
-const incrementalSearchTool = "peco"
+const (
+	incrementalSearchTool = "peco"
+	maxVarPromptWidth     = 18
+)
 
 var (
 	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
@@ -108,10 +111,25 @@ func ReadFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-// ReadInput は値の入力を受け付ける
+func Prompt(maxNameLen int, varName string) string {
+	pad := maxNameLen + 2 // plus double quote
+	if pad > maxVarPromptWidth {
+		pad = maxVarPromptWidth
+	}
+	name := fmt.Sprintf(`"%s"`, varName)
+
+	return fmt.Sprintf(`Enter %-*s: `, pad, name)
+}
+
+func Input(prompt string) string {
+	fmt.Print(prompt)
+	return readInput()
+}
+
+// readInput は値の入力を受け付ける
 // Ctrl + C でキャンセルされた場合は、プログラムを正常終了する
 // FIXME context & goroutine を使用した方法もあるので、検討する
-func ReadInput() string {
+func readInput() string {
 	// Ctrl+C (SIGINT) を補足
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT)

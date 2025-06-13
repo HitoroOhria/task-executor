@@ -1,6 +1,9 @@
 package model
 
-import "github.com/go-task/task/v3/taskfile/ast"
+import (
+	"github.com/HitoroOhria/task-executer/command"
+	"github.com/go-task/task/v3/taskfile/ast"
+)
 
 type Task struct {
 	t *ast.Task
@@ -9,8 +12,8 @@ type Task struct {
 	Vars *Vars
 }
 
-func NewTask(t *ast.Task) *Task {
-	vs := NewVars(t)
+func NewTask(t *ast.Task, cmd command.Command) *Task {
+	vs := NewVars(t, cmd)
 
 	return &Task{
 		t:    t,

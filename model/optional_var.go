@@ -3,25 +3,25 @@ package model
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/adapter"
+	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type OptionalVar struct {
-	v        *ast.Var
-	inputter *adapter.Inputter
+	v   *ast.Var
+	cmd command.Command
 
 	Name       string
 	Value      VarValue
 	InputValue *string
 }
 
-func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
+func NewOptionalVar(name string, v *ast.Var, cmd command.Command) *OptionalVar {
 	value := NewVarValue(v.Value)
 
 	return &OptionalVar{
 		v:          v,
-		inputter:   adapter.InputterClient,
+		cmd:        cmd,
 		Name:       name,
 		Value:      value,
 		InputValue: nil,
@@ -58,8 +58,8 @@ func (v *OptionalVar) IsInputtable() bool {
 }
 
 func (v *OptionalVar) Input(maxNameLen int) {
-	prompt := v.inputter.Prompt(maxNameLen, v.Name)
-	value := v.inputter.Input(prompt)
+	prompt := v.cmd.Prompt(maxNameLen, v.Name)
+	value := v.cmd.Input(prompt)
 
 	v.InputValue = &value
 }

@@ -3,22 +3,22 @@ package model
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/adapter"
+	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type RequiredVar struct {
-	v        *ast.VarsWithValidation
-	inputter *adapter.Inputter
+	v   *ast.VarsWithValidation
+	cmd command.Command
 
 	Name       string
 	InputValue *string
 }
 
-func NewRequiredVar(v *ast.VarsWithValidation) *RequiredVar {
+func NewRequiredVar(v *ast.VarsWithValidation, cmd command.Command) *RequiredVar {
 	return &RequiredVar{
 		v:          v,
-		inputter:   adapter.InputterClient,
+		cmd:        cmd,
 		Name:       v.Name,
 		InputValue: nil,
 	}
@@ -37,8 +37,8 @@ func (v *RequiredVar) Arg() string {
 }
 
 func (v *RequiredVar) Input(maxNameLen int) error {
-	prompt := v.inputter.Prompt(maxNameLen, v.Name)
-	value := v.inputter.Input(prompt)
+	prompt := v.cmd.Prompt(maxNameLen, v.Name)
+	value := v.cmd.Input(prompt)
 
 	if value == "" {
 		return fmt.Errorf("variable %s is required", v.Name)

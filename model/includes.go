@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
@@ -21,13 +22,13 @@ func NewInclude(name string, taskfile *Taskfile) *Include {
 
 type Includes []*Include
 
-func NewIncludes(parentTaskfilePath string, includes *ast.Includes) (Includes, error) {
+func NewIncludes(parentTaskfilePath string, includes *ast.Includes, cmd command.Command) (Includes, error) {
 	dir := filepath.Dir(parentTaskfilePath)
 
 	is := make(Includes, 0)
 	for name, i := range includes.All() {
 		path := filepath.Join(dir, i.Taskfile)
-		tf, err := NewTaskfile(path)
+		tf, err := NewTaskfile(path, cmd)
 		if err != nil {
 			return nil, fmt.Errorf("NewTaskfile: %w", err)
 		}

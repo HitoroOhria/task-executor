@@ -6,15 +6,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/HitoroOhria/task-executer/adapter"
+	cmdimpl "github.com/HitoroOhria/task-executer/command/impl"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
-
-func init() {
-	adapter.SetInputter(io.ReadInput)
-}
 
 func getArgs() string {
 	taskfilePath := flag.String("taskfile", "", "Taskfile path.")
@@ -36,7 +32,20 @@ func main() {
 		}
 	}
 
-	taskName, err := io.SelectTaskName(taskfilePath)
+	cmd := cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{
+		ReadFile:       io.ReadFile,
+		Prompt:         io.Prompt,
+		Input:          io.Input,
+		SelectTaskName: io.SelectTaskName,
+	})
+
+	tf, err := model.NewTaskfile(taskfilePath, cmd)
+	if err != nil {
+		handleError(err, "failed to new Taskfile")
+		return
+	}
+
+	taskName, err := tf.SelectTask()
 	if err != nil {
 		if errors.Is(err, io.ErrTaskfileNotFound) {
 			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfilePath))
@@ -49,12 +58,6 @@ func main() {
 		}
 
 		handleError(err, "failed to select task name")
-		return
-	}
-
-	tf, err := model.NewTaskfile(taskfilePath)
-	if err != nil {
-		handleError(err, "failed to new Taskfile")
 		return
 	}
 
