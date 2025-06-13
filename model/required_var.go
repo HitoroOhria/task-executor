@@ -3,12 +3,13 @@ package model
 import (
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/adapter"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type RequiredVar struct {
 	v        *ast.VarsWithValidation
-	inputter *Inputter
+	inputter *adapter.Inputter
 
 	Name       string
 	InputValue *string
@@ -17,7 +18,7 @@ type RequiredVar struct {
 func NewRequiredVar(v *ast.VarsWithValidation) *RequiredVar {
 	return &RequiredVar{
 		v:          v,
-		inputter:   inputter,
+		inputter:   adapter.InputterClient,
 		Name:       v.Name,
 		InputValue: nil,
 	}

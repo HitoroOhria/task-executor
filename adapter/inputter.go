@@ -1,4 +1,4 @@
-package model
+package adapter
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 
 const maxVarPromptWidth = 18
 
-var inputter *Inputter
+var InputterClient *Inputter
 
 type Inputter struct {
 	readInput func() string
@@ -19,7 +19,7 @@ func NewInputter(readInput func() string) *Inputter {
 }
 
 func SetInputter(readInput func() string) {
-	inputter = NewInputter(readInput)
+	InputterClient = NewInputter(readInput)
 }
 
 func (i *Inputter) Prompt(maxNameLen int, varName string) string {

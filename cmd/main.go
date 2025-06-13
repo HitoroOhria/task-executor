@@ -6,13 +6,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/HitoroOhria/task-executer/adapter"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
 
 func init() {
-	model.SetInputter(io.ReadInput)
+	adapter.SetInputter(io.ReadInput)
 }
 
 func getArgs() string {

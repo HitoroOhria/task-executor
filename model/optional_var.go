@@ -3,12 +3,13 @@ package model
 import (
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/adapter"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type OptionalVar struct {
 	v        *ast.Var
-	inputter *Inputter
+	inputter *adapter.Inputter
 
 	Name       string
 	Value      VarValue
@@ -20,7 +21,7 @@ func NewOptionalVar(name string, v *ast.Var) *OptionalVar {
 
 	return &OptionalVar{
 		v:          v,
-		inputter:   inputter,
+		inputter:   adapter.InputterClient,
 		Name:       name,
 		Value:      value,
 		InputValue: nil,
