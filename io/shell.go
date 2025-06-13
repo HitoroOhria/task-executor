@@ -22,12 +22,12 @@ var (
 
 	selectTaskNameCommand = func(taskfile string) string {
 		return fmt.Sprintf(`
-	  task -t %s -l --sort none | \
-	    tail -n +2 | \
-	    sed 's/^\*//' | \
-	    %s | \
-	    sed -E 's/^ ([^ ]+):.*/\1/' | \
-	    sed -E 's/:$//'
+          task -t %s -l --sort none | \
+            tail -n +2 | \
+            sed 's/^\*//' | \
+            %s | \
+            sed -E 's/^ ([^ ]+):.*/\1/' | \
+            sed -E 's/:$//'
 	`, taskfile, incrementalSearchTool)
 	}
 
