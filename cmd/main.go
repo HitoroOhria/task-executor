@@ -6,11 +6,23 @@ import (
 	"log"
 	"os"
 
+	"github.com/HitoroOhria/task-executer/command"
 	cmdimpl "github.com/HitoroOhria/task-executer/command/impl"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
+
+var cmd command.Command
+
+func init() {
+	cmd = cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{
+		ReadFile:       io.ReadFile,
+		Prompt:         io.Prompt,
+		Input:          io.Input,
+		SelectTaskName: io.SelectTaskName,
+	})
+}
 
 func getArgs() string {
 	taskfilePath := flag.String("taskfile", "", "Taskfile path.")
@@ -31,13 +43,6 @@ func main() {
 			return
 		}
 	}
-
-	cmd := cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{
-		ReadFile:       io.ReadFile,
-		Prompt:         io.Prompt,
-		Input:          io.Input,
-		SelectTaskName: io.SelectTaskName,
-	})
 
 	tf, err := model.NewTaskfile(taskfilePath, cmd)
 	if err != nil {
