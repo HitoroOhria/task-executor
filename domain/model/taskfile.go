@@ -12,16 +12,16 @@ import (
 var ErrTaskNotFound = errors.New("task not found")
 
 type Taskfile struct {
-	tf  *ast.Taskfile
-	cmd Command
+	tf   *ast.Taskfile
+	deps *Deps
 
 	FilePath string
 	Tasks    Tasks
 	Includes Includes
 }
 
-func NewTaskfile(filePath string, parentIncludeNames []string, cmd Command) (*Taskfile, error) {
-	file, err := cmd.ReadFile(filePath)
+func NewTaskfile(filePath string, parentIncludeNames []string, deps *Deps) (*Taskfile, error) {
+	file, err := deps.Command.ReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadFile: %w", err)
 	}
@@ -34,18 +34,18 @@ func NewTaskfile(filePath string, parentIncludeNames []string, cmd Command) (*Ta
 
 	ts := make(Tasks, 0)
 	for _, task := range tf.Tasks.All(NoSort) {
-		t := NewTask(task, parentIncludeNames, cmd)
+		t := NewTask(task, parentIncludeNames, deps)
 		ts = append(ts, t)
 	}
 
-	is, err := NewIncludes(filePath, tf.Includes, parentIncludeNames, cmd)
+	is, err := NewIncludes(filePath, tf.Includes, parentIncludeNames, deps)
 	if err != nil {
 		return nil, fmt.Errorf("NewIncludes: %w", err)
 	}
 
 	return &Taskfile{
 		tf:       tf,
-		cmd:      cmd,
+		deps:     deps,
 		FilePath: filePath,
 		Tasks:    ts,
 		Includes: is,
@@ -85,7 +85,7 @@ func (tf *Taskfile) FindSelectedTask() *Task {
 }
 
 func (tf *Taskfile) SelectTask() (*Task, error) {
-	fullName, err := tf.cmd.SelectTaskName(tf.FilePath)
+	fullName, err := tf.deps.Command.SelectTaskName(tf.FilePath)
 	if err != nil {
 		return nil, fmt.Errorf("cmd.SelectTaskName: %w", err)
 	}

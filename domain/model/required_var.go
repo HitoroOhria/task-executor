@@ -7,20 +7,20 @@ import (
 )
 
 type RequiredVar struct {
-	v   *ast.VarsWithValidation
-	cmd Command
+	v    *ast.VarsWithValidation
+	deps *Deps
 
 	Name       string
 	Prompt     *Prompt
 	InputValue *string
 }
 
-func NewRequiredVar(v *ast.VarsWithValidation, cmd Command) *RequiredVar {
+func NewRequiredVar(v *ast.VarsWithValidation, deps *Deps) *RequiredVar {
 	prompt := NewPrompt(v.Name)
 
 	return &RequiredVar{
 		v:          v,
-		cmd:        cmd,
+		deps:       deps,
 		Name:       v.Name,
 		Prompt:     prompt,
 		InputValue: nil,
@@ -41,7 +41,7 @@ func (v *RequiredVar) Arg() string {
 
 func (v *RequiredVar) Input(maxNameLen int) error {
 	prompt := v.Prompt.Generate(maxNameLen)
-	value := v.cmd.Input(prompt)
+	value := v.deps.Command.Input(prompt)
 
 	if value == "" {
 		return fmt.Errorf("variable %s is required", v.Name)

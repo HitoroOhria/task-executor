@@ -8,26 +8,29 @@ import (
 
 // Vars は変数名と値のセット
 type Vars struct {
+	deps *Deps
+
 	Requires  []*RequiredVar
 	Optionals []*OptionalVar
 }
 
-func NewVars(t *ast.Task, cmd Command) *Vars {
+func NewVars(t *ast.Task, deps *Deps) *Vars {
 	rvs := make([]*RequiredVar, 0)
 	if t.Requires != nil {
 		for _, v := range t.Requires.Vars {
-			rvs = append(rvs, NewRequiredVar(v, cmd))
+			rvs = append(rvs, NewRequiredVar(v, deps))
 		}
 	}
 
 	ovs := make([]*OptionalVar, 0)
 	if t.Vars != nil {
 		for name, v := range t.Vars.All() {
-			ovs = append(ovs, NewOptionalVar(name, &v, cmd))
+			ovs = append(ovs, NewOptionalVar(name, &v, deps))
 		}
 	}
 
 	return &Vars{
+		deps:      deps,
 		Requires:  rvs,
 		Optionals: ovs,
 	}
@@ -51,7 +54,7 @@ func (vs *Vars) Input() error {
 	}
 
 	if len(vs.Requires) != 0 {
-		fmt.Println("\033[35m--- required ---\033[0m") // マゼンダ色
+		vs.deps.Printer.RequiredHeader()
 
 		for _, r := range vs.Requires {
 			err := r.Input(vs.GetMaxNameLen())
@@ -62,15 +65,14 @@ func (vs *Vars) Input() error {
 	}
 
 	if len(vs.InputtableOptVars()) != 0 {
-		fmt.Println("\033[36m--- optional ---\033[0m") // シアン色
+		vs.deps.Printer.OptionalHeader()
 
 		for _, o := range vs.InputtableOptVars() {
 			o.Input(vs.GetMaxNameLen())
 		}
 	}
 
-	fmt.Println("---   end   ---")
-	fmt.Println()
+	vs.deps.Printer.EndLine()
 
 	return nil
 }

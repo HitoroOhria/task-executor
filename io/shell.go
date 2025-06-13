@@ -145,8 +145,6 @@ func readInput() string {
 }
 
 func RunTask(taskfile string, name string, args ...string) error {
-	fmt.Printf("run: task -t %s %s %s\n", taskfile, name, strings.Join(args, " "))
-
 	cmdArgs := append([]string{"-t", taskfile, name}, args...)
 	cmd := exec.Command("task", cmdArgs...)
 	cmd.Stdout = os.Stdout

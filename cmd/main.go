@@ -6,16 +6,19 @@ import (
 	"log"
 	"os"
 
-	"github.com/HitoroOhria/task-executer/command"
+	"github.com/HitoroOhria/task-executer/adapter"
 	"github.com/HitoroOhria/task-executer/domain/model"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/go-task/task/v3/errors"
 )
 
-var cmd model.Command
+var deps *model.Deps
 
 func init() {
-	cmd = command.NewCommand()
+	deps = model.NewDeps(
+		adapter.NewCommand(),
+		adapter.NewPrinter(),
+	)
 }
 
 func getArgs() string {
@@ -38,7 +41,7 @@ func main() {
 		}
 	}
 
-	tf, err := model.NewTaskfile(taskfilePath, nil, cmd)
+	tf, err := model.NewTaskfile(taskfilePath, nil, deps)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return

@@ -7,8 +7,8 @@ import (
 )
 
 type OptionalVar struct {
-	v   *ast.Var
-	cmd Command
+	v    *ast.Var
+	deps *Deps
 
 	Name       string
 	Value      VarValue
@@ -16,13 +16,13 @@ type OptionalVar struct {
 	InputValue *string
 }
 
-func NewOptionalVar(name string, v *ast.Var, cmd Command) *OptionalVar {
+func NewOptionalVar(name string, v *ast.Var, deps *Deps) *OptionalVar {
 	value := NewVarValue(v.Value)
 	prompt := NewPrompt(name)
 
 	return &OptionalVar{
 		v:          v,
-		cmd:        cmd,
+		deps:       deps,
 		Name:       name,
 		Value:      value,
 		Prompt:     prompt,
@@ -61,7 +61,7 @@ func (v *OptionalVar) IsInputtable() bool {
 
 func (v *OptionalVar) Input(maxNameLen int) {
 	prompt := v.Prompt.Generate(maxNameLen)
-	value := v.cmd.Input(prompt)
+	value := v.deps.Command.Input(prompt)
 
 	v.InputValue = &value
 }

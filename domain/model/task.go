@@ -6,8 +6,8 @@ import (
 )
 
 type Task struct {
-	t   *ast.Task
-	cmd Command
+	t    *ast.Task
+	deps *Deps
 
 	Name     value.TaskName
 	FullName value.FullTaskName
@@ -15,14 +15,14 @@ type Task struct {
 	Selected bool
 }
 
-func NewTask(t *ast.Task, includeNames []string, cmd Command) *Task {
+func NewTask(t *ast.Task, includeNames []string, deps *Deps) *Task {
 	name := value.NewTaskName(t.Name())
 	fullName := value.NewFullTaskNameForIncluded(includeNames, t.Name())
-	vs := NewVars(t, cmd)
+	vs := NewVars(t, deps)
 
 	return &Task{
 		t:        t,
-		cmd:      cmd,
+		deps:     deps,
 		Name:     name,
 		FullName: fullName,
 		Vars:     vs,
@@ -45,5 +45,8 @@ func (t *Task) CommandArgs() []string {
 }
 
 func (t *Task) Run(taskfile string) error {
-	return t.cmd.RunTask(taskfile, t.FullName, t.CommandArgs()...)
+	t.deps.Printer.LineBreaks()
+	t.deps.Printer.ExecutionTask(taskfile, t.FullName, t.CommandArgs()...)
+
+	return t.deps.Command.RunTask(taskfile, t.FullName, t.CommandArgs()...)
 }
