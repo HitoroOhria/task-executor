@@ -43,14 +43,14 @@ func findFileName(path string) (string, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return "", ErrFileNotFound
+			return "", fmt.Errorf("%w: path = %s", ErrFileNotFound, path)
 		}
 
 		return "", fmt.Errorf("os.Stat: %w", err)
 	}
 
 	if info.IsDir() {
-		return "", ErrFileNotFound
+		return "", fmt.Errorf("%w: target is directory. path = %s", ErrFileNotFound, path)
 	}
 
 	return info.Name(), nil
@@ -81,7 +81,7 @@ func SelectTaskName(taskfile string) (string, error) {
 	_, err := findFileName(taskfile)
 	if err != nil {
 		if errors.Is(err, ErrFileNotFound) {
-			return "", ErrTaskfileNotFound
+			return "", fmt.Errorf("%w: taskfile = %s", ErrTaskfileNotFound, taskfile)
 		}
 
 		return "", fmt.Errorf("findFileName: %w", err)

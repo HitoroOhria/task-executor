@@ -50,25 +50,15 @@ func main() {
 		return
 	}
 
-	taskName, err := tf.SelectTask()
+	task, err := tf.SelectTask()
 	if err != nil {
-		if errors.Is(err, io.ErrTaskfileNotFound) {
-			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfilePath))
-			return
-		}
 		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
 		if errors.Is(err, io.ErrCanceledIncrementalSearch) {
 			os.Exit(0)
 			return
 		}
 
-		handleError(err, "failed to select task name")
-		return
-	}
-
-	task := tf.Tasks.FindByName(taskName)
-	if task == nil {
-		handleError(fmt.Errorf("task '%s' not found", taskName), "failed to find task")
+		handleError(err, "failed to select task")
 		return
 	}
 

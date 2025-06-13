@@ -1,12 +1,15 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 	"gopkg.in/yaml.v3"
 )
+
+var ErrTaskNotFound = errors.New("task not found")
 
 type Taskfile struct {
 	tf  *ast.Taskfile
@@ -49,8 +52,18 @@ func NewTaskfile(filePath string, cmd command.Command) (*Taskfile, error) {
 	}, nil
 }
 
-func (tf *Taskfile) SelectTask() (string, error) {
-	return tf.cmd.SelectTaskName(tf.FilePath)
+func (tf *Taskfile) SelectTask() (*Task, error) {
+	taskName, err := tf.cmd.SelectTaskName(tf.FilePath)
+	if err != nil {
+		return nil, fmt.Errorf("cmd.SelectTaskName: %w", err)
+	}
+
+	task := tf.Tasks.FindByName(taskName)
+	if task == nil {
+		return nil, fmt.Errorf("%w: task = %s", ErrTaskNotFound, taskName)
+	}
+
+	return task, nil
 }
 
 // NoSort
