@@ -31,6 +31,11 @@ tasks:
     cmds:
       - go run ./cmd -taskfile=test/Taskfile.includes.yml
 
+  run:all:
+    desc: Run all test program
+    cmds:
+      - go run ./cmd -taskfile=test/Taskfile.all.yml
+
   fmt:
     desc: Format go program
     cmds:

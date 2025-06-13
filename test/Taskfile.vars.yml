@@ -1,7 +1,6 @@
 version: "3"
 
 vars:
-  GLOBAL: "GLOBAL"
   DEFAULT_BASE: "default-base"
 
 tasks:
