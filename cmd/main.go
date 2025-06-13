@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	cmdimpl "github.com/HitoroOhria/task-executer/command"
+	"github.com/HitoroOhria/task-executer/command"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
@@ -15,12 +15,7 @@ import (
 var cmd model.Command
 
 func init() {
-	cmd = cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{
-		ReadFile:       io.ReadFile,
-		Input:          io.Input,
-		SelectTaskName: io.SelectTaskName,
-		RunTask:        io.RunTask,
-	})
+	cmd = command.NewCommand()
 }
 
 func getArgs() string {

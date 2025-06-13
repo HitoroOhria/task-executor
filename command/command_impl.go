@@ -1,6 +1,7 @@
 package command
 
 import (
+	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 )
 
@@ -11,34 +12,22 @@ type CommandImpl struct {
 	runTask        func(taskfile string, name string, args ...string) error
 }
 
-type NewCommandArgs struct {
-	ReadFile       func(path string) ([]byte, error)
-	Input          func(prompt string) string
-	SelectTaskName func(taskfile string) (string, error)
-	RunTask        func(taskfile string, name string, args ...string) error
-}
-
-func NewCommand(args *NewCommandArgs) model.Command {
-	return &CommandImpl{
-		readFile:       args.ReadFile,
-		input:          args.Input,
-		selectTaskName: args.SelectTaskName,
-		runTask:        args.RunTask,
-	}
+func NewCommand() model.Command {
+	return &CommandImpl{}
 }
 
 func (c *CommandImpl) ReadFile(path string) ([]byte, error) {
-	return c.readFile(path)
+	return io.ReadFile(path)
 }
 
 func (c *CommandImpl) SelectTaskName(taskfile string) (string, error) {
-	return c.selectTaskName(taskfile)
+	return io.SelectTaskName(taskfile)
 }
 
 func (c *CommandImpl) Input(prompt string) string {
-	return c.input(prompt)
+	return io.Input(prompt)
 }
 
 func (c *CommandImpl) RunTask(taskfile string, name string, args ...string) error {
-	return c.runTask(taskfile, name, args...)
+	return io.RunTask(taskfile, name, args...)
 }
