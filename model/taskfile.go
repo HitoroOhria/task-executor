@@ -71,7 +71,7 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 func (tf *Taskfile) RunSelectedTask() error {
 	seleted := tf.Tasks.FindSelected()
 	if seleted == nil {
-		return fmt.Errorf("selected task not found")
+		return fmt.Errorf("%w: selected task not found", ErrTaskNotFound )
 	}
 
 	return seleted.Run(tf.FilePath)
