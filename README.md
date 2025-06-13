@@ -51,9 +51,9 @@ $ ./main
 - [ ] 依存先のタスクの変数も入力できるようにする
 - [x] include した Taskfile に対応する
 
-### Development
+## Development
 
-Taskfile 経由で実行する。
+Run program via Taskfiel.
 
 ```shell
 $ task run TF="<taskfile>"
