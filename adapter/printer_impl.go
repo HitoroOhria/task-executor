@@ -22,11 +22,11 @@ func NewPrinter() console.Printer {
 }
 
 func (p *PrinterImpl) RequiredHeader() {
-	color.Red(requiredHeader)
+	color.Magenta(requiredHeader)
 }
 
 func (p *PrinterImpl) OptionalHeader() {
-	color.Yellow(optionalHeader)
+	color.Cyan(optionalHeader)
 }
 
 func (p *PrinterImpl) EndLine() {
