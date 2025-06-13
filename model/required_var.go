@@ -3,20 +3,19 @@ package model
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type RequiredVar struct {
 	v   *ast.VarsWithValidation
-	cmd command.Command
+	cmd Command
 
 	Name       string
 	Prompt     *Prompt
 	InputValue *string
 }
 
-func NewRequiredVar(v *ast.VarsWithValidation, cmd command.Command) *RequiredVar {
+func NewRequiredVar(v *ast.VarsWithValidation, cmd Command) *RequiredVar {
 	prompt := NewPrompt(v.Name)
 
 	return &RequiredVar{

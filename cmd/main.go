@@ -6,14 +6,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/HitoroOhria/task-executer/command"
-	cmdimpl "github.com/HitoroOhria/task-executer/command/impl"
+	cmdimpl "github.com/HitoroOhria/task-executer/command"
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
 
-var cmd command.Command
+var cmd model.Command
 
 func init() {
 	cmd = cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{

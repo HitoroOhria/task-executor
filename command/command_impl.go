@@ -1,6 +1,8 @@
-package cmdimpl
+package command
 
-import "github.com/HitoroOhria/task-executer/command"
+import (
+	"github.com/HitoroOhria/task-executer/model"
+)
 
 type CommandImpl struct {
 	readFile       func(path string) ([]byte, error)
@@ -16,7 +18,7 @@ type NewCommandArgs struct {
 	RunTask        func(taskfile string, name string, args ...string) error
 }
 
-func NewCommand(args *NewCommandArgs) command.Command {
+func NewCommand(args *NewCommandArgs) model.Command {
 	return &CommandImpl{
 		readFile:       args.ReadFile,
 		input:          args.Input,

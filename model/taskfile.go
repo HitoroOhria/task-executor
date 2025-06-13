@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 	"gopkg.in/yaml.v3"
 )
@@ -13,14 +12,14 @@ var ErrTaskNotFound = errors.New("task not found")
 
 type Taskfile struct {
 	tf  *ast.Taskfile
-	cmd command.Command
+	cmd Command
 
 	FilePath string
 	Tasks    Tasks
 	Includes Includes
 }
 
-func NewTaskfile(filePath string, cmd command.Command) (*Taskfile, error) {
+func NewTaskfile(filePath string, cmd Command) (*Taskfile, error) {
 	file, err := cmd.ReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadFile: %w", err)

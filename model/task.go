@@ -1,20 +1,19 @@
 package model
 
 import (
-	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type Task struct {
 	t   *ast.Task
-	cmd command.Command
+	cmd Command
 
 	Name     string
 	Vars     *Vars
 	Selected bool
 }
 
-func NewTask(t *ast.Task, cmd command.Command) *Task {
+func NewTask(t *ast.Task, cmd Command) *Task {
 	vs := NewVars(t, cmd)
 
 	return &Task{

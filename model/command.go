@@ -1,6 +1,6 @@
-//go:generate mockgen -source=command.go -destination=mock/command.go -package=mock_command
+//go:generate mockgen -source=command.go -destination=mock/command.go -package=mock_model
 
-package command
+package model
 
 type Command interface {
 	ReadFile(path string) ([]byte, error)

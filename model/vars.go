@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/command"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
@@ -13,7 +12,7 @@ type Vars struct {
 	Optionals []*OptionalVar
 }
 
-func NewVars(t *ast.Task, cmd command.Command) *Vars {
+func NewVars(t *ast.Task, cmd Command) *Vars {
 	rvs := make([]*RequiredVar, 0)
 	if t.Requires != nil {
 		for _, v := range t.Requires.Vars {
