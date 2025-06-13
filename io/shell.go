@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"path/filepath"
 	"strings"
 	"syscall"
 
@@ -29,73 +28,60 @@ var (
 	`, taskfile, incrementalSearchTool)
 	}
 
-	ErrSpecifiedTaskfileNotFound = errors.New("specified taskfile not found")
+	ErrFileNotFound              = errors.New("file not found")
+	ErrTaskfileNotFound          = errors.New("taskfile not found")
 	ErrCanceledIncrementalSearch = errors.New("canceled incremental search")
 )
 
-func findFileByName(name string) (string, error) {
-	dir, err := os.Getwd()
+// findFileName はファイルパスからファイル名を取得する
+// ファイルパスは相対パスでも絶対パスでも良い
+// ファイルが見つからなかった場合、ErrFileNotFound を返す
+func findFileName(path string) (string, error) {
+	info, err := os.Stat(path)
 	if err != nil {
-		panic(err)
+		if errors.Is(err, os.ErrNotExist) {
+			return "", ErrFileNotFound
+		}
+
+		return "", fmt.Errorf("os.Stat: %w", err)
 	}
 
-	foundName := ""
-	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			return nil
-		}
-
-		if info.Name() == name {
-			foundName = info.Name()
-			return nil
-		}
-
-		return nil
-	})
-	if err != nil {
-		return "", fmt.Errorf("filepath.Walk: %w", err)
+	if info.IsDir() {
+		return "", ErrFileNotFound
 	}
 
-	return foundName, nil
+	return info.Name(), nil
 }
 
 // FindTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
 func FindTaskfileName() (string, error) {
 	taskfileName := ""
 	for _, taskfile := range searchTaskfiles {
-		found, err := findFileByName(taskfile)
+		found, err := findFileName(taskfile)
 		if err != nil {
 			// 期待するファイル名をループ探索しているので、ファイルが見つからなくてもスルーする
-			if errors.Is(err, ErrSpecifiedTaskfileNotFound) {
+			if errors.Is(err, ErrFileNotFound) {
 				continue
 			}
 
-			return "", fmt.Errorf("findFileByName: %w", err)
-		}
-		if found == "" {
-			continue
+			return "", fmt.Errorf("findFileName: %w", err)
 		}
 
 		taskfileName = found
 		break
-	}
-	if taskfileName == "" {
-		return "", fmt.Errorf("taskfile not found")
 	}
 
 	return taskfileName, nil
 }
 
 func SelectTaskName(taskfile string) (string, error) {
-	found, err := findFileByName(taskfile)
+	_, err := findFileName(taskfile)
 	if err != nil {
-		return "", fmt.Errorf("findFileByName: %w", err)
-	}
-	if found == "" {
-		return "", ErrSpecifiedTaskfileNotFound
+		if errors.Is(err, ErrFileNotFound) {
+			return "", ErrTaskfileNotFound
+		}
+
+		return "", fmt.Errorf("findFileName: %w", err)
 	}
 
 	cmd := exec.Command("sh", "-c", selectTaskNameCommand(taskfile))

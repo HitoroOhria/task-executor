@@ -38,7 +38,7 @@ func main() {
 
 	taskName, err := io.SelectTaskName(taskfileName)
 	if err != nil {
-		if errors.Is(err, io.ErrSpecifiedTaskfileNotFound) {
+		if errors.Is(err, io.ErrTaskfileNotFound) {
 			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfileName))
 			return
 		}
