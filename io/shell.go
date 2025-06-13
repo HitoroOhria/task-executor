@@ -1,4 +1,4 @@
-package main
+package io
 
 import (
 	"bufio"
@@ -29,7 +29,7 @@ var (
 	`, taskfile, incrementalSearchTool)
 	}
 
-	ErrSpecifiedTaskfileNotFound = errors.New("specifiled taskfile not found")
+	ErrSpecifiedTaskfileNotFound = errors.New("specified taskfile not found")
 	ErrCanceledIncrementalSearch = errors.New("canceled incremental search")
 )
 
@@ -62,8 +62,8 @@ func findFileByName(name string) (string, error) {
 	return foundName, nil
 }
 
-// findTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
-func findTaskfileName() (string, error) {
+// FindTaskfileName は、カレントディレクトリの Taskfile を探索し、ファイル名を返却する
+func FindTaskfileName() (string, error) {
 	taskfileName := ""
 	for _, taskfile := range searchTaskfiles {
 		found, err := findFileByName(taskfile)
@@ -89,7 +89,7 @@ func findTaskfileName() (string, error) {
 	return taskfileName, nil
 }
 
-func selectTaskName(taskfile string) (string, error) {
+func SelectTaskName(taskfile string) (string, error) {
 	found, err := findFileByName(taskfile)
 	if err != nil {
 		return "", fmt.Errorf("findFileByName: %w", err)
@@ -113,7 +113,7 @@ func selectTaskName(taskfile string) (string, error) {
 	return o, nil
 }
 
-func readFile(path string) ([]byte, error) {
+func ReadFile(path string) ([]byte, error) {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("os.ReadFile: %w", err)
@@ -122,10 +122,10 @@ func readFile(path string) ([]byte, error) {
 	return file, nil
 }
 
-// readInput は値の入力を受け付ける
+// ReadInput は値の入力を受け付ける
 // Ctrl + C でキャンセルされた場合は、プログラムを正常終了する
 // FIXME context & goroutine を使用した方法もあるので、検討する
-func readInput() string {
+func ReadInput() string {
 	// Ctrl+C (SIGINT) を補足
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT)
@@ -153,7 +153,7 @@ func readInput() string {
 	return ""
 }
 
-func runTask(taskfile string, name string, args ...string) error {
+func RunTask(taskfile string, name string, args ...string) error {
 	fmt.Printf("run: task -t %s %s %s\n", taskfile, name, strings.Join(args, " "))
 
 	cmdArgs := append([]string{"-t", taskfile, name}, args...)

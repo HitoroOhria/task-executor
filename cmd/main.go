@@ -6,12 +6,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 	"github.com/go-task/task/v3/errors"
 )
 
 func init() {
-	model.SetInputter(readInput)
+	model.SetInputter(io.ReadInput)
 }
 
 func getArgs() string {
@@ -27,21 +28,21 @@ func main() {
 
 	// 引数で Taskfile の指定がなければ、カレントディレクトリから探索する
 	if taskfileName == "" {
-		taskfileName, err = findTaskfileName()
+		taskfileName, err = io.FindTaskfileName()
 		if err != nil {
 			handleError(err, "failed to get taskfile name")
 			return
 		}
 	}
 
-	taskName, err := selectTaskName(taskfileName)
+	taskName, err := io.SelectTaskName(taskfileName)
 	if err != nil {
-		if errors.Is(err, ErrSpecifiedTaskfileNotFound) {
+		if errors.Is(err, io.ErrSpecifiedTaskfileNotFound) {
 			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfileName))
 			return
 		}
 		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
-		if errors.Is(err, ErrCanceledIncrementalSearch) {
+		if errors.Is(err, io.ErrCanceledIncrementalSearch) {
 			os.Exit(0)
 			return
 		}
@@ -50,7 +51,7 @@ func main() {
 		return
 	}
 
-	file, err := readFile(taskfileName)
+	file, err := io.ReadFile(taskfileName)
 	if err != nil {
 		handleError(err, "failed to read file")
 		return
@@ -75,7 +76,7 @@ func main() {
 	}
 
 	// タスクを実行
-	err = runTask(tf.Name, task.Name, task.CommandArgs()...)
+	err = io.RunTask(tf.Name, task.Name, task.CommandArgs()...)
 	if err != nil {
 		handleError(err, "failed to run task")
 		return
