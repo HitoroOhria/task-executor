@@ -4,8 +4,8 @@
 タスクの変数がある場合、その変数の値を指定することができる。
 
 ```shell
-$ task run
-task: [run] go run ./cmd -taskfile=Taskfile.test.yml
+$ task run:vars
+task: [run] go run ./cmd -taskfile=test/Taskfile.vars.yml
 
 # select task
 QUERY>
@@ -36,21 +36,11 @@ DEFAULT1=default1
 DEFAULT2=default-base
 ```
 
-### 実行方法
-
-ビルドして経由で実行する。
+## How to use
 
 ```shell
 $ task build
 $ ./main
-```
-
-### 動作確認方法
-
-Taskfile 経由で実行する。
-
-```shell
-$ task run
 ```
 
 ## Features
@@ -59,4 +49,15 @@ $ task run
 - [x] デフォルト値付きのオプショナルな変数を入力できるようにする
 - [ ] 入力プロンプトにデフォルト値の値を入力する
 - [ ] 依存先のタスクの変数も入力できるようにする
-- [ ] include した Taskfile に対応する
+- [x] include した Taskfile に対応する
+
+### Development
+
+Taskfile 経由で実行する。
+
+```shell
+$ task run TF="<taskfile>"
+$ task run:vars
+$ task run:includes
+$ task run:all
+```
