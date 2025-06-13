@@ -41,6 +41,11 @@ tasks:
     cmds:
       - go vet ./...
 
+  gen:
+    desc: Generate go code
+    cmds:
+      - go generate ./...
+
   test:
     desc: Test all case
     cmds:
