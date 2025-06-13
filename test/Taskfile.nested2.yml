@@ -1,0 +1,11 @@
+version: "3"
+
+includes:
+  nested2-1:
+    taskfile: ./Taskfile.nested2-1.yml
+
+tasks:
+  print:
+    desc: Print
+    cmds:
+      - echo "nested2"

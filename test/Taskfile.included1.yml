@@ -1,7 +1,0 @@
-version: "3"
-
-tasks:
-  included1:
-    desc: included1
-    cmds:
-      - echo "included1"

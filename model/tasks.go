@@ -12,6 +12,16 @@ func (ts Tasks) FindByName(name string) *Task {
 	return nil
 }
 
+func (ts Tasks) FindByFullName(fullName FullTaskName) *Task {
+	for _, t := range ts {
+		if t.FullName == fullName {
+			return t
+		}
+	}
+
+	return nil
+}
+
 func (ts Tasks) FindSelected() *Task {
 	for _, t := range ts {
 		if t.Selected {

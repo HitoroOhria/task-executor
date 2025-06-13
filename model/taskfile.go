@@ -19,7 +19,7 @@ type Taskfile struct {
 	Includes Includes
 }
 
-func NewTaskfile(filePath string, cmd Command) (*Taskfile, error) {
+func NewTaskfile(filePath string, parentIncludeNames []string, cmd Command) (*Taskfile, error) {
 	file, err := cmd.ReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadFile: %w", err)
@@ -33,11 +33,11 @@ func NewTaskfile(filePath string, cmd Command) (*Taskfile, error) {
 
 	ts := make(Tasks, 0)
 	for _, task := range tf.Tasks.All(NoSort) {
-		t := NewTask(task, cmd)
+		t := NewTask(task, parentIncludeNames, cmd)
 		ts = append(ts, t)
 	}
 
-	is, err := NewIncludes(filePath, tf.Includes, cmd)
+	is, err := NewIncludes(filePath, tf.Includes, parentIncludeNames, cmd)
 	if err != nil {
 		return nil, fmt.Errorf("NewIncludes: %w", err)
 	}
@@ -51,15 +51,47 @@ func NewTaskfile(filePath string, cmd Command) (*Taskfile, error) {
 	}, nil
 }
 
+func (tf *Taskfile) FindTaskFullByName(fullName FullTaskName) *Task {
+	task := tf.Tasks.FindByFullName(fullName)
+	if task != nil {
+		return task
+	}
+
+	for _, i := range tf.Includes {
+		task = i.Taskfile.FindTaskFullByName(fullName)
+		if task != nil {
+			return task
+		}
+	}
+
+	return nil
+}
+
+func (tf *Taskfile) FindSelectedTask() *Task {
+	found := tf.Tasks.FindSelected()
+	if found != nil {
+		return found
+	}
+
+	for _, i := range tf.Includes {
+		found = i.Taskfile.FindSelectedTask()
+		if found != nil {
+			return found
+		}
+	}
+
+	return nil
+}
+
 func (tf *Taskfile) SelectTask() (*Task, error) {
-	taskName, err := tf.cmd.SelectTaskName(tf.FilePath)
+	fullName, err := tf.cmd.SelectTaskName(tf.FilePath)
 	if err != nil {
 		return nil, fmt.Errorf("cmd.SelectTaskName: %w", err)
 	}
 
-	task := tf.Tasks.FindByName(taskName)
+	task := tf.FindTaskFullByName(fullName)
 	if task == nil {
-		return nil, fmt.Errorf("%w: task = %s", ErrTaskNotFound, taskName)
+		return nil, fmt.Errorf("%w: task = %s", ErrTaskNotFound, fullName)
 	}
 
 	task.Select()
@@ -68,7 +100,7 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 }
 
 func (tf *Taskfile) RunSelectedTask() error {
-	selected := tf.Tasks.FindSelected()
+	selected := tf.FindSelectedTask()
 	if selected == nil {
 		return fmt.Errorf("%w: selected task not found", ErrTaskNotFound)
 	}

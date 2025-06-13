@@ -1,6 +1,8 @@
 package command
 
 import (
+	"fmt"
+
 	"github.com/HitoroOhria/task-executer/io"
 	"github.com/HitoroOhria/task-executer/model"
 )
@@ -20,14 +22,19 @@ func (c *CommandImpl) ReadFile(path string) ([]byte, error) {
 	return io.ReadFile(path)
 }
 
-func (c *CommandImpl) SelectTaskName(taskfile string) (string, error) {
-	return io.SelectTaskName(taskfile)
+func (c *CommandImpl) SelectTaskName(taskfile string) (model.FullTaskName, error) {
+	name, err := io.SelectTaskName(taskfile)
+	if err != nil {
+		return "", fmt.Errorf("io.SelectTaskName: %w", err)
+	}
+
+	return model.NewFullTaskName(name), nil
 }
 
 func (c *CommandImpl) Input(prompt string) string {
 	return io.Input(prompt)
 }
 
-func (c *CommandImpl) RunTask(taskfile string, name string, args ...string) error {
-	return io.RunTask(taskfile, name, args...)
+func (c *CommandImpl) RunTask(taskfile string, fullName model.FullTaskName, args ...string) error {
+	return io.RunTask(taskfile, string(fullName), args...)
 }

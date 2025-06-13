@@ -1,11 +1,13 @@
 version: "3"
 
 includes:
-  one:
-    taskfile: ./Taskfile.included1.yml
+  nested1:
+    taskfile: ./Taskfile.nested1.yml
+  nested2:
+    taskfile: ./Taskfile.nested2.yml
 
 tasks:
-  simple:
-    desc: Simple command
+  print:
+    desc: Print
     cmds:
-      - echo "run simple command"
+      - echo "includes"

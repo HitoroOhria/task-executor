@@ -38,7 +38,7 @@ func main() {
 		}
 	}
 
-	tf, err := model.NewTaskfile(taskfilePath, cmd)
+	tf, err := model.NewTaskfile(taskfilePath, nil, cmd)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return

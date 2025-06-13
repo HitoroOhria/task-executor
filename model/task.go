@@ -9,17 +9,20 @@ type Task struct {
 	cmd Command
 
 	Name     string
+	FullName FullTaskName
 	Vars     *Vars
 	Selected bool
 }
 
-func NewTask(t *ast.Task, cmd Command) *Task {
+func NewTask(t *ast.Task, includeNames []string, cmd Command) *Task {
+	fullName := NewFullTaskNameForIncluded(includeNames, t.Name())
 	vs := NewVars(t, cmd)
 
 	return &Task{
 		t:        t,
 		cmd:      cmd,
 		Name:     t.Name(),
+		FullName: fullName,
 		Vars:     vs,
 		Selected: false,
 	}
@@ -40,5 +43,5 @@ func (t *Task) CommandArgs() []string {
 }
 
 func (t *Task) Run(taskfile string) error {
-	return t.cmd.RunTask(taskfile, t.Name, t.CommandArgs()...)
+	return t.cmd.RunTask(taskfile, t.FullName, t.CommandArgs()...)
 }

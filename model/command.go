@@ -4,7 +4,7 @@ package model
 
 type Command interface {
 	ReadFile(path string) ([]byte, error)
-	SelectTaskName(taskfile string) (string, error)
+	SelectTaskName(taskfile string) (FullTaskName, error)
 	Input(prompt string) string
-	RunTask(taskfile string, name string, args ...string) error
+	RunTask(taskfile string, fullName FullTaskName, args ...string) error
 }

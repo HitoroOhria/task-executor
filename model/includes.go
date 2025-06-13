@@ -21,13 +21,15 @@ func NewInclude(name string, taskfile *Taskfile) *Include {
 
 type Includes []*Include
 
-func NewIncludes(parentTaskfilePath string, includes *ast.Includes, cmd Command) (Includes, error) {
+func NewIncludes(parentTaskfilePath string, includes *ast.Includes, parentIncludeNames []string, cmd Command) (Includes, error) {
 	dir := filepath.Dir(parentTaskfilePath)
 
 	is := make(Includes, 0)
 	for name, i := range includes.All() {
 		path := filepath.Join(dir, i.Taskfile)
-		tf, err := NewTaskfile(path, cmd)
+		includeNames := append(parentIncludeNames, name)
+
+		tf, err := NewTaskfile(path, includeNames, cmd)
 		if err != nil {
 			return nil, fmt.Errorf("NewTaskfile: %w", err)
 		}

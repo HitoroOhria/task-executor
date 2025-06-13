@@ -1,0 +1,7 @@
+version: "3"
+
+tasks:
+  print:
+    desc: Print
+    cmds:
+      - echo "nested1"

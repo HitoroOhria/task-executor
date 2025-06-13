@@ -5,10 +5,10 @@ vars:
   DEFAULT_BASE: "default-base"
 
 tasks:
-  simple:
-    desc: Simple command
+  print:
+    desc: Print
     cmds:
-      - echo "run simple command"
+      - echo "vars"
 
   with-vars:
     desc: Command with vars
