@@ -1,0 +1,11 @@
+version: "3"
+
+includes:
+  one:
+    taskfile: ./Taskfile.included1.yml
+
+tasks:
+  simple:
+    desc: Simple command
+    cmds:
+      - echo "run simple command"
