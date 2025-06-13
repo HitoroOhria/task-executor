@@ -2,9 +2,11 @@
 
 package model
 
+import "github.com/HitoroOhria/task-executer/domain/value"
+
 type Command interface {
 	ReadFile(path string) ([]byte, error)
-	SelectTaskName(taskfile string) (FullTaskName, error)
+	SelectTaskName(taskfile string) (value.FullTaskName, error)
 	Input(prompt string) string
-	RunTask(taskfile string, fullName FullTaskName, args ...string) error
+	RunTask(taskfile string, fullName value.FullTaskName, args ...string) error
 }

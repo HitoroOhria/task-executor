@@ -1,18 +1,10 @@
 package model
 
+import "github.com/HitoroOhria/task-executer/domain/value"
+
 type Tasks []*Task
 
-func (ts Tasks) FindByName(name string) *Task {
-	for _, t := range ts {
-		if t.Name == name {
-			return t
-		}
-	}
-
-	return nil
-}
-
-func (ts Tasks) FindByFullName(fullName FullTaskName) *Task {
+func (ts Tasks) FindByFullName(fullName value.FullTaskName) *Task {
 	for _, t := range ts {
 		if t.FullName == fullName {
 			return t

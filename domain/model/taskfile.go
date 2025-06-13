@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/go-task/task/v3/taskfile/ast"
 	"gopkg.in/yaml.v3"
 )
@@ -51,7 +52,7 @@ func NewTaskfile(filePath string, parentIncludeNames []string, cmd Command) (*Ta
 	}, nil
 }
 
-func (tf *Taskfile) FindTaskFullByName(fullName FullTaskName) *Task {
+func (tf *Taskfile) FindTaskFullByName(fullName value.FullTaskName) *Task {
 	task := tf.Tasks.FindByFullName(fullName)
 	if task != nil {
 		return task

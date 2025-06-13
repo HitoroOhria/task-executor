@@ -7,6 +7,7 @@ package mock_model
 import (
 	reflect "reflect"
 
+	model "github.com/HitoroOhria/task-executer/domain/value"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -63,9 +64,9 @@ func (mr *MockCommandMockRecorder) ReadFile(path interface{}) *gomock.Call {
 }
 
 // RunTask mocks base method.
-func (m *MockCommand) RunTask(taskfile, name string, args ...string) error {
+func (m *MockCommand) RunTask(taskfile string, fullName model.FullTaskName, args ...string) error {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{taskfile, name}
+	varargs := []interface{}{taskfile, fullName}
 	for _, a := range args {
 		varargs = append(varargs, a)
 	}
@@ -75,17 +76,17 @@ func (m *MockCommand) RunTask(taskfile, name string, args ...string) error {
 }
 
 // RunTask indicates an expected call of RunTask.
-func (mr *MockCommandMockRecorder) RunTask(taskfile, name interface{}, args ...interface{}) *gomock.Call {
+func (mr *MockCommandMockRecorder) RunTask(taskfile, fullName interface{}, args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{taskfile, name}, args...)
+	varargs := append([]interface{}{taskfile, fullName}, args...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunTask", reflect.TypeOf((*MockCommand)(nil).RunTask), varargs...)
 }
 
 // SelectTaskName mocks base method.
-func (m *MockCommand) SelectTaskName(taskfile string) (string, error) {
+func (m *MockCommand) SelectTaskName(taskfile string) (model.FullTaskName, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SelectTaskName", taskfile)
-	ret0, _ := ret[0].(string)
+	ret0, _ := ret[0].(model.FullTaskName)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

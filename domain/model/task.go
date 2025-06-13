@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
@@ -8,20 +9,21 @@ type Task struct {
 	t   *ast.Task
 	cmd Command
 
-	Name     string
-	FullName FullTaskName
+	Name     value.TaskName
+	FullName value.FullTaskName
 	Vars     *Vars
 	Selected bool
 }
 
 func NewTask(t *ast.Task, includeNames []string, cmd Command) *Task {
-	fullName := NewFullTaskNameForIncluded(includeNames, t.Name())
+	name := value.NewTaskName(t.Name())
+	fullName := value.NewFullTaskNameForIncluded(includeNames, t.Name())
 	vs := NewVars(t, cmd)
 
 	return &Task{
 		t:        t,
 		cmd:      cmd,
-		Name:     t.Name(),
+		Name:     name,
 		FullName: fullName,
 		Vars:     vs,
 		Selected: false,
