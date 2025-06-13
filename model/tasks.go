@@ -11,3 +11,13 @@ func (ts Tasks) FindByName(name string) *Task {
 
 	return nil
 }
+
+func (ts Tasks) FindSelected() *Task {
+	for _, t := range ts {
+		if t.Selected {
+			return t
+		}
+	}
+
+	return nil
+}

@@ -21,6 +21,7 @@ func init() {
 		Prompt:         io.Prompt,
 		Input:          io.Input,
 		SelectTaskName: io.SelectTaskName,
+		RunTask:        io.RunTask,
 	})
 }
 
@@ -62,14 +63,13 @@ func main() {
 		return
 	}
 
-	err = task.Vars.Input()
+	err = task.Input()
 	if err != nil {
 		handleError(err, "failed to input vars")
 		return
 	}
 
-	// タスクを実行
-	err = io.RunTask(tf.FilePath, task.Name, task.CommandArgs()...)
+	err = tf.RunSelectedTask()
 	if err != nil {
 		handleError(err, "failed to run task")
 		return

@@ -63,7 +63,19 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 		return nil, fmt.Errorf("%w: task = %s", ErrTaskNotFound, taskName)
 	}
 
+	task.Select()
+
 	return task, nil
+}
+
+func (tf *Taskfile) RunSelectedTask() error {
+	seleted := tf.Tasks.FindSelected()
+	if seleted == nil {
+		return fmt.Errorf("selected task not found")
+	}
+
+	return seleted.Run(tf.FilePath)
+
 }
 
 // NoSort

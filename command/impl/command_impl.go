@@ -7,6 +7,7 @@ type CommandImpl struct {
 	prompt         func(maxNameLen int, varName string) string
 	input          func(prompt string) string
 	selectTaskName func(taskfile string) (string, error)
+	runTask        func(taskfile string, name string, args ...string) error
 }
 
 type NewCommandArgs struct {
@@ -14,6 +15,7 @@ type NewCommandArgs struct {
 	Prompt         func(maxNameLen int, varName string) string
 	Input          func(prompt string) string
 	SelectTaskName func(taskfile string) (string, error)
+	RunTask        func(taskfile string, name string, args ...string) error
 }
 
 func NewCommand(args *NewCommandArgs) command.Command {
@@ -22,6 +24,7 @@ func NewCommand(args *NewCommandArgs) command.Command {
 		prompt:         args.Prompt,
 		input:          args.Input,
 		selectTaskName: args.SelectTaskName,
+		runTask:        args.RunTask,
 	}
 }
 
@@ -39,4 +42,8 @@ func (c *CommandImpl) Prompt(maxNameLen int, varName string) string {
 
 func (c *CommandImpl) Input(prompt string) string {
 	return c.input(prompt)
+}
+
+func (c *CommandImpl) RunTask(taskfile string, name string, args ...string) error {
+	return c.runTask(taskfile, name, args...)
 }

@@ -7,4 +7,5 @@ type Command interface {
 	SelectTaskName(taskfile string) (string, error)
 	Prompt(maxNameLen int, varName string) string
 	Input(prompt string) string
+	RunTask(taskfile string, name string, args ...string) error
 }
