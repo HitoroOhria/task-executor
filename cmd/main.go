@@ -17,29 +17,29 @@ func init() {
 }
 
 func getArgs() string {
-	taskfileName := flag.String("taskfile", "", "Taskfile name.")
+	taskfilePath := flag.String("taskfile", "", "Taskfile path.")
 	flag.Parse()
 
-	return *taskfileName
+	return *taskfilePath
 }
 
 func main() {
 	var err error
-	taskfileName := getArgs()
+	taskfilePath := getArgs()
 
 	// 引数で Taskfile の指定がなければ、カレントディレクトリから探索する
-	if taskfileName == "" {
-		taskfileName, err = io.FindTaskfileName()
+	if taskfilePath == "" {
+		taskfilePath, err = io.FindTaskfileName()
 		if err != nil {
 			handleError(err, "failed to get taskfile name")
 			return
 		}
 	}
 
-	taskName, err := io.SelectTaskName(taskfileName)
+	taskName, err := io.SelectTaskName(taskfilePath)
 	if err != nil {
 		if errors.Is(err, io.ErrTaskfileNotFound) {
-			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfileName))
+			handleError(err, fmt.Sprintf("taskfile not found: %s", taskfilePath))
 			return
 		}
 		// インクリメンタルサーチ中にキャンセルされた場合、何もしない
@@ -52,13 +52,7 @@ func main() {
 		return
 	}
 
-	file, err := io.ReadFile(taskfileName)
-	if err != nil {
-		handleError(err, "failed to read file")
-		return
-	}
-
-	tf, err := model.NewTaskfile(taskfileName, file)
+	tf, err := model.NewTaskfile(taskfilePath)
 	if err != nil {
 		handleError(err, "failed to new Taskfile")
 		return
@@ -77,7 +71,7 @@ func main() {
 	}
 
 	// タスクを実行
-	err = io.RunTask(tf.Name, task.Name, task.CommandArgs()...)
+	err = io.RunTask(tf.FilePath, task.Name, task.CommandArgs()...)
 	if err != nil {
 		handleError(err, "failed to run task")
 		return

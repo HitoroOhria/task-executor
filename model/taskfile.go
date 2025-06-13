@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 
+	"github.com/HitoroOhria/task-executer/io"
 	"github.com/go-task/task/v3/taskfile/ast"
 	"gopkg.in/yaml.v3"
 )
@@ -10,13 +11,20 @@ import (
 type Taskfile struct {
 	tf *ast.Taskfile
 
-	Name  string
-	Tasks Tasks
+	FilePath string
+	Tasks    Tasks
+	Includes Includes
 }
 
-func NewTaskfile(name string, file []byte) (*Taskfile, error) {
+func NewTaskfile(filePath string) (*Taskfile, error) {
+	// FIXME DI する
+	file, err := io.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("io.ReadFile: %w", err)
+	}
+
 	tf := &ast.Taskfile{}
-	err := yaml.Unmarshal(file, tf)
+	err = yaml.Unmarshal(file, tf)
 	if err != nil {
 		return nil, fmt.Errorf("yaml.Unmarshal: %w", err)
 	}
@@ -27,10 +35,16 @@ func NewTaskfile(name string, file []byte) (*Taskfile, error) {
 		ts = append(ts, t)
 	}
 
+	is, err := NewIncludes(filePath, tf.Includes)
+	if err != nil {
+		return nil, fmt.Errorf("NewIncludes: %w", err)
+	}
+
 	return &Taskfile{
-		tf:    tf,
-		Name:  name,
-		Tasks: ts,
+		tf:       tf,
+		FilePath: filePath,
+		Tasks:    ts,
+		Includes: is,
 	}, nil
 }
 
