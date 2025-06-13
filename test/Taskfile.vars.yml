@@ -60,9 +60,9 @@ tasks:
     silent: true
     cmds:
       - echo "VALUE={{.VALUE}}"
+      - echo "REQUIRED={{.REQUIRED}}"
       - echo "OPTIONAL1={{.OPTIONAL1}}"
       - echo "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2={{.LOOOOOOOOOOOOOOOOOONG_OPTIONAL2}}"
-      - echo "REQUIRED={{.REQUIRED}}"
       - echo "DEFAULT1={{.DEFAULT1}}"
       - echo "DEFAULT2={{.DEFAULT2}}"
     vars:

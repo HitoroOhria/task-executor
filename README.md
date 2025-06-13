@@ -29,9 +29,9 @@ Enter "DEFAULT2"        :
 
 run: task -t test/Taskfile.vars.yml with-all REQUIRED="foo" OPTIONAL1="bar"
 VALUE=value
+REQUIRED=foo
 OPTIONAL1=bar
 LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=
-REQUIRED=foo
 DEFAULT1=default1
 DEFAULT2=default-base
 ```
