@@ -30,8 +30,10 @@ tasks:
     desc: Command with default vars
     silent: true
     cmds:
-      - echo "DEFAULT1={{.DEFAULT1}} DEFAULT2={{.DEFAULT2}}"
-      - echo "DEFAULT3={{.DEFAULT3}} DEFAULT4={{.DEFAULT4}}"
+      - echo "DEFAULT1={{.DEFAULT1}}"
+      - echo "DEFAULT2={{.DEFAULT2}}"
+      - echo "DEFAULT3={{.DEFAULT3}}"
+      - echo "DEFAULT4={{.DEFAULT4}}"
     vars:
       DEFAULT1: '{{.DEFAULT1 | default "default1"}}'
       DEFAULT2: '{{.DEFAULT2 | default .DEFAULT_BASE}}'
