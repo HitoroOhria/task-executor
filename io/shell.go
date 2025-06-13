@@ -12,10 +12,7 @@ import (
 	"github.com/go-task/task/v3/errors"
 )
 
-const (
-	incrementalSearchTool = "peco"
-	maxVarPromptWidth     = 18
-)
+const incrementalSearchTool = "peco"
 
 var (
 	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
@@ -109,16 +106,6 @@ func ReadFile(path string) ([]byte, error) {
 	}
 
 	return file, nil
-}
-
-func Prompt(maxNameLen int, varName string) string {
-	pad := maxNameLen + 2 // plus double quote
-	if pad > maxVarPromptWidth {
-		pad = maxVarPromptWidth
-	}
-	name := fmt.Sprintf(`"%s"`, varName)
-
-	return fmt.Sprintf(`Enter %-*s: `, pad, name)
 }
 
 func Input(prompt string) string {

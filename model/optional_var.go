@@ -13,17 +13,20 @@ type OptionalVar struct {
 
 	Name       string
 	Value      VarValue
+	Prompt     *Prompt
 	InputValue *string
 }
 
 func NewOptionalVar(name string, v *ast.Var, cmd command.Command) *OptionalVar {
 	value := NewVarValue(v.Value)
+	prompt := NewPrompt(name)
 
 	return &OptionalVar{
 		v:          v,
 		cmd:        cmd,
 		Name:       name,
 		Value:      value,
+		Prompt:     prompt,
 		InputValue: nil,
 	}
 }
@@ -58,7 +61,7 @@ func (v *OptionalVar) IsInputtable() bool {
 }
 
 func (v *OptionalVar) Input(maxNameLen int) {
-	prompt := v.cmd.Prompt(maxNameLen, v.Name)
+	prompt := v.Prompt.Generate(maxNameLen)
 	value := v.cmd.Input(prompt)
 
 	v.InputValue = &value

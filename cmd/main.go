@@ -18,7 +18,6 @@ var cmd command.Command
 func init() {
 	cmd = cmdimpl.NewCommand(&cmdimpl.NewCommandArgs{
 		ReadFile:       io.ReadFile,
-		Prompt:         io.Prompt,
 		Input:          io.Input,
 		SelectTaskName: io.SelectTaskName,
 		RunTask:        io.RunTask,

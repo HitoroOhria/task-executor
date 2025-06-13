@@ -12,14 +12,18 @@ type RequiredVar struct {
 	cmd command.Command
 
 	Name       string
+	Prompt     *Prompt
 	InputValue *string
 }
 
 func NewRequiredVar(v *ast.VarsWithValidation, cmd command.Command) *RequiredVar {
+	prompt := NewPrompt(v.Name)
+
 	return &RequiredVar{
 		v:          v,
 		cmd:        cmd,
 		Name:       v.Name,
+		Prompt:     prompt,
 		InputValue: nil,
 	}
 }
@@ -37,7 +41,7 @@ func (v *RequiredVar) Arg() string {
 }
 
 func (v *RequiredVar) Input(maxNameLen int) error {
-	prompt := v.cmd.Prompt(maxNameLen, v.Name)
+	prompt := v.Prompt.Generate(maxNameLen)
 	value := v.cmd.Input(prompt)
 
 	if value == "" {
