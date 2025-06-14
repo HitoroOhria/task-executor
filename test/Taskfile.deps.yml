@@ -32,9 +32,10 @@ tasks:
     desc: Has dependency task
     silent: true
     cmds:
+      - echo "DEPS_HAS_VARS_REQUIRED={{.DEPS_HAS_VARS_REQUIRED}}"
       - echo "DEPS_HAS_VARS_OPTIONAL={{.DEPS_HAS_VARS_OPTIONAL}}"
       - task: has-vars
     vars:
-      DEPS_HAS_VARS_OPTIONAL: "{{.DEPS_HAS_VARS}}"
+      DEPS_HAS_VARS_OPTIONAL: "{{.DEPS_HAS_VARS_OPTIONAL}}"
     requires:
       vars: [ DEPS_HAS_VARS_REQUIRED ]
