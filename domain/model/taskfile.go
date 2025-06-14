@@ -107,7 +107,7 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 // CollectAllVars は、タスクの変数を依存タスクまで再起的に探索して集める
 func (tf *Taskfile) CollectAllVars(task *Task) (*Vars, error) {
 	vars := task.Vars.Duplicate()
-	for _, cmd := range task.Cmds.DependencyTasks() {
+	for _, cmd := range task.Cmds.FilterByDependencyTask() {
 		depsTask := tf.Tasks.FindByName(*cmd.TaskName)
 		if depsTask == nil {
 			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, *cmd.TaskName)

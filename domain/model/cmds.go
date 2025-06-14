@@ -6,6 +6,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// Cmds はコマンド集合
 type Cmds []*Cmd
 
 func NewCmds(cmds []*ast.Cmd, includeNames []string) (Cmds, error) {
@@ -21,7 +22,8 @@ func NewCmds(cmds []*ast.Cmd, includeNames []string) (Cmds, error) {
 	return cs, nil
 }
 
-func (cs Cmds) DependencyTasks() []*Cmd {
+// FilterByDependencyTask は依存タスクのコマンドのみにフィルターする
+func (cs Cmds) FilterByDependencyTask() []*Cmd {
 	cmds := make([]*Cmd, 0, len(cs))
 	for _, c := range cs {
 		if c.TaskName == nil {

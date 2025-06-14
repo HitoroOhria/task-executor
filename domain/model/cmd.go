@@ -7,6 +7,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// Cmd はコマンド
 type Cmd struct {
 	Command      *string
 	TaskName     *value.TaskName
