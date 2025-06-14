@@ -9,9 +9,13 @@ import (
 
 // Cmd はコマンド
 type Cmd struct {
-	Command      *string
-	TaskName     *value.TaskName
-	FullTaskName *value.FullTaskName
+	Command        *string
+	DependencyTask *DependencyTask
+}
+
+type DependencyTask struct {
+	Name     value.TaskName
+	FullName value.FullTaskName
 }
 
 func NewCmd(cmd *ast.Cmd, includeNames []string) (*Cmd, error) {
@@ -20,22 +24,22 @@ func NewCmd(cmd *ast.Cmd, includeNames []string) (*Cmd, error) {
 		command = &cmd.Cmd
 	}
 
-	var tname *value.TaskName
-	var fname *value.FullTaskName
+	var dependencyTask *DependencyTask
 	if cmd.Task != "" {
 		name, err := value.NewTaskName(cmd.Task)
 		if err != nil {
 			return nil, fmt.Errorf("value.NewTaskName: %w", err)
 		}
-		tname = &name
-
 		fullName := value.NewFullTaskNameForIncluded(includeNames, cmd.Task)
-		fname = &fullName
+
+		dependencyTask = &DependencyTask{
+			Name:     name,
+			FullName: fullName,
+		}
 	}
 
 	return &Cmd{
-		Command:      command,
-		TaskName:     tname,
-		FullTaskName: fname,
+		Command:        command,
+		DependencyTask: dependencyTask,
 	}, nil
 }

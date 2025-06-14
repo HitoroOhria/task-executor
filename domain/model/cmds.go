@@ -26,7 +26,7 @@ func NewCmds(cmds []*ast.Cmd, includeNames []string) (Cmds, error) {
 func (cs Cmds) FilterByDependencyTask() []*Cmd {
 	cmds := make([]*Cmd, 0, len(cs))
 	for _, c := range cs {
-		if c.TaskName == nil {
+		if c.DependencyTask == nil {
 			continue
 		}
 
