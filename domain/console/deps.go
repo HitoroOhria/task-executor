@@ -1,13 +1,13 @@
 package console
 
 type Deps struct {
-	Command Command
+	Runner  Runner
 	Printer Printer
 }
 
-func NewDeps(cmd Command, printer Printer) *Deps {
+func NewDeps(runner Runner, printer Printer) *Deps {
 	return &Deps{
-		Command: cmd,
+		Runner:  runner,
 		Printer: printer,
 	}
 }

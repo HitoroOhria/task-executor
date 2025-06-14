@@ -22,7 +22,7 @@ type Taskfile struct {
 }
 
 func NewTaskfile(filePath string, parentIncludeNames []string, deps *console.Deps) (*Taskfile, error) {
-	file, err := deps.Command.ReadFile(filePath)
+	file, err := deps.Runner.ReadFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadFile: %w", err)
 	}
@@ -92,7 +92,7 @@ func (tf *Taskfile) FindSelectedTask() *Task {
 
 // SelectTask はタスクを選択する
 func (tf *Taskfile) SelectTask() (*Task, error) {
-	fullName, err := tf.deps.Command.SelectTaskName(tf.FilePath)
+	fullName, err := tf.deps.Runner.SelectTaskName(tf.FilePath)
 	if err != nil {
 		return nil, fmt.Errorf("cmd.SelectTaskName: %w", err)
 	}
@@ -161,7 +161,7 @@ func (tf *Taskfile) RunSelectedTask() error {
 	tf.deps.Printer.LineBreaks()
 	tf.deps.Printer.ExecutionTask(tf.FilePath, selected.FullName, vars.CommandArgs()...)
 
-	return tf.deps.Command.RunTask(tf.FilePath, selected.FullName, vars.CommandArgs()...)
+	return tf.deps.Runner.RunTask(tf.FilePath, selected.FullName, vars.CommandArgs()...)
 }
 
 // NoSort

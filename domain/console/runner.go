@@ -1,10 +1,11 @@
-//go:generate mockgen -source=command.go -destination=mock/command.go -package=mock_console
+//go:generate mockgen -source=runner.go -destination=mock/runner.go -package=mock_console
 
 package console
 
 import "github.com/HitoroOhria/task-executer/domain/value"
 
-type Command interface {
+// Runner はコマンドを走らせるもの
+type Runner interface {
 	ReadFile(path string) ([]byte, error)
 	SelectTaskName(taskfile string) (value.FullTaskName, error)
 	Input(prompt string) string

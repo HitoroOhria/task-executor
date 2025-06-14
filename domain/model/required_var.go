@@ -47,7 +47,7 @@ func (v *RequiredVar) Arg() string {
 // Input は変数の値を入力する
 func (v *RequiredVar) Input(maxNameLen int) error {
 	prompt := v.Prompt.Generate(maxNameLen)
-	value := v.deps.Command.Input(prompt)
+	value := v.deps.Runner.Input(prompt)
 
 	if value == "" {
 		return fmt.Errorf("variable %s is required", v.Name)

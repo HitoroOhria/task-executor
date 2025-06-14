@@ -17,7 +17,7 @@ var deps *console.Deps
 
 func init() {
 	deps = console.NewDeps(
-		adapter.NewCommand(),
+		adapter.NewRunner(),
 		adapter.NewPrinter(),
 	)
 }
