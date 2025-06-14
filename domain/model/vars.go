@@ -11,19 +11,22 @@ import (
 type Vars struct {
 	deps *console.Deps
 
-	Requires  []*RequiredVar
-	Optionals []*OptionalVar
+	Requires  RequiredVars
+	Optionals OptionalVars
 }
 
+type RequiredVars []*RequiredVar
+type OptionalVars []*OptionalVar
+
 func NewVars(t *ast.Task, deps *console.Deps) *Vars {
-	rvs := make([]*RequiredVar, 0)
+	rvs := make(RequiredVars, 0)
 	if t.Requires != nil {
 		for _, v := range t.Requires.Vars {
 			rvs = append(rvs, NewRequiredVar(v, deps))
 		}
 	}
 
-	ovs := make([]*OptionalVar, 0)
+	ovs := make(OptionalVars, 0)
 	if t.Vars != nil {
 		for name, v := range t.Vars.All() {
 			ovs = append(ovs, NewOptionalVar(name, &v, deps))
@@ -51,8 +54,8 @@ func (vs *Vars) Merge(target *Vars) {
 }
 
 // InputtableOptVars は入力可能はオプショナル変数を返す
-func (vs *Vars) InputtableOptVars() []*OptionalVar {
-	ovs := make([]*OptionalVar, 0, len(vs.Optionals))
+func (vs *Vars) InputtableOptVars() OptionalVars {
+	ovs := make(OptionalVars, 0, len(vs.Optionals))
 	for _, ov := range vs.Optionals {
 		if ov.IsInputtable() {
 			ovs = append(ovs, ov)
@@ -70,7 +73,7 @@ func (vs *Vars) Input() error {
 	if len(vs.Requires) != 0 {
 		vs.deps.Printer.RequiredHeader()
 
-		for _, r := range vs.Requires {
+		for _, r := range vs.Requires.Distinct() {
 			err := r.Input(vs.GetMaxNameLen())
 			if err != nil {
 				return fmt.Errorf("r.Input: %w", err)
@@ -81,7 +84,7 @@ func (vs *Vars) Input() error {
 	if len(vs.InputtableOptVars()) != 0 {
 		vs.deps.Printer.OptionalHeader()
 
-		for _, o := range vs.InputtableOptVars() {
+		for _, o := range vs.InputtableOptVars().Distinct() {
 			o.Input(vs.GetMaxNameLen())
 		}
 	}
@@ -126,4 +129,50 @@ func (vs *Vars) CommandArgs() []string {
 	}
 
 	return args
+}
+
+func (vs RequiredVars) existByName(name string) bool {
+	for _, v := range vs {
+		if v.Name == name {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (vs RequiredVars) Distinct() RequiredVars {
+	vars := make(RequiredVars, 0, len(vs))
+	for _, v := range vs {
+		if vars.existByName(v.Name) {
+			continue
+		}
+
+		vars = append(vars, v)
+	}
+
+	return vars
+}
+
+func (vs OptionalVars) existByName(name string) bool {
+	for _, v := range vs {
+		if v.Name == name {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (vs OptionalVars) Distinct() OptionalVars {
+	vars := make(OptionalVars, 0, len(vs))
+	for _, v := range vs {
+		if vars.existByName(v.Name) {
+			continue
+		}
+
+		vars = append(vars, v)
+	}
+
+	return vars
 }
