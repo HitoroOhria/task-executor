@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/HitoroOhria/task-executer/domain/console"
-	"github.com/HitoroOhria/task-executer/domain/value"
+	"github.com/HitoroOhria/task-executor/domain/console"
+	"github.com/HitoroOhria/task-executor/domain/value"
 	"github.com/fatih/color"
 )
 

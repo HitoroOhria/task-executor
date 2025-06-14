@@ -2,7 +2,7 @@
 
 package console
 
-import "github.com/HitoroOhria/task-executer/domain/value"
+import "github.com/HitoroOhria/task-executor/domain/value"
 
 // Runner はコマンドを走らせるもの
 type Runner interface {

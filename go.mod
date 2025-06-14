@@ -1,4 +1,4 @@
-module github.com/HitoroOhria/task-executer
+module github.com/HitoroOhria/task-executor
 
 go 1.24.3
 

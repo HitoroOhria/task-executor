@@ -1,6 +1,6 @@
 package model
 
-import "github.com/HitoroOhria/task-executer/domain/value"
+import "github.com/HitoroOhria/task-executor/domain/value"
 
 // Tasks はタスク集合
 type Tasks []*Task

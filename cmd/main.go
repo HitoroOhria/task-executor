@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/HitoroOhria/task-executer/adapter"
-	"github.com/HitoroOhria/task-executer/domain/console"
-	"github.com/HitoroOhria/task-executer/domain/model"
-	"github.com/HitoroOhria/task-executer/io"
+	"github.com/HitoroOhria/task-executor/adapter"
+	"github.com/HitoroOhria/task-executor/domain/console"
+	"github.com/HitoroOhria/task-executor/domain/model"
+	"github.com/HitoroOhria/task-executor/io"
 	"github.com/go-task/task/v3/errors"
 )
 

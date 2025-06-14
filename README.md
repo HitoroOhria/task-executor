@@ -1,4 +1,4 @@
-# task-executer
+# task-executor
 
 [Task](https://taskfile.dev/) のタスクをインクリメンタルサーチで実行する。
 タスクの変数がある場合、その変数の値を指定することができる。

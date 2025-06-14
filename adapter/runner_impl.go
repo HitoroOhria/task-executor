@@ -3,9 +3,9 @@ package adapter
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/domain/console"
-	"github.com/HitoroOhria/task-executer/domain/value"
-	"github.com/HitoroOhria/task-executer/io"
+	"github.com/HitoroOhria/task-executor/domain/console"
+	"github.com/HitoroOhria/task-executor/domain/value"
+	"github.com/HitoroOhria/task-executor/io"
 )
 
 type RunnerImpl struct {

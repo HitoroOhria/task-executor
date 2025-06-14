@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/HitoroOhria/task-executer/domain/console"
+	"github.com/HitoroOhria/task-executor/domain/console"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 

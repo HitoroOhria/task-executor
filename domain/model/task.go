@@ -3,8 +3,8 @@ package model
 import (
 	"fmt"
 
-	"github.com/HitoroOhria/task-executer/domain/console"
-	"github.com/HitoroOhria/task-executer/domain/value"
+	"github.com/HitoroOhria/task-executor/domain/console"
+	"github.com/HitoroOhria/task-executor/domain/value"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 

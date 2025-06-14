@@ -7,7 +7,7 @@ package mock_console
 import (
 	reflect "reflect"
 
-	value "github.com/HitoroOhria/task-executer/domain/value"
+	value "github.com/HitoroOhria/task-executor/domain/value"
 	gomock "github.com/golang/mock/gomock"
 )
 
