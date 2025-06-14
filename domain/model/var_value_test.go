@@ -1,6 +1,10 @@
 package model
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestVarValue_IsOptional(t *testing.T) {
 	type args struct {
@@ -30,10 +34,10 @@ func TestVarValue_IsOptional(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "オプショナル変数であり、空白がない場合、true を返すこと",
-			v:    VarValue(`{{.VARIABLE}}`),
+			name: "特殊文字を含む変数名の場合、true を返すこと",
+			v:    VarValue(`{{.VAR_NAME-WITH.SPECIAL}}`),
 			args: args{
-				name: "VARIABLE",
+				name: "VAR_NAME-WITH.SPECIAL",
 			},
 			want: true,
 		},
@@ -54,24 +58,16 @@ func TestVarValue_IsOptional(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "特殊文字を含む変数名の場合、true を返すこと",
-			v:    VarValue(`{{.VAR_NAME-WITH.SPECIAL}}`),
-			args: args{
-				name: "VAR_NAME-WITH.SPECIAL",
-			},
-			want: true,
-		},
-		{
-			name: "値ありの変数の場合、false を返すこと",
-			v:    VarValue(`value`),
+			name: "空文字列の場合、false を返すこと",
+			v:    VarValue(``),
 			args: args{
 				name: "VARIABLE",
 			},
 			want: false,
 		},
 		{
-			name: "部分的に一致する変数名の場合、false を返すこと",
-			v:    VarValue(`{{.VARIABLE_OTHER}}`),
+			name: "値ありの変数の場合、false を返すこと",
+			v:    VarValue(`value`),
 			args: args{
 				name: "VARIABLE",
 			},
@@ -86,8 +82,8 @@ func TestVarValue_IsOptional(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "空文字列の場合、false を返すこと",
-			v:    VarValue(``),
+			name: "部分的に一致する変数名の場合、false を返すこと",
+			v:    VarValue(`{{.VARIABLE_OTHER}}`),
 			args: args{
 				name: "VARIABLE",
 			},
@@ -199,9 +195,9 @@ func TestVarValue_IsOptionalWithDefault(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.IsOptionalWithDefault(tt.args.name); got != tt.want {
-				t.Errorf("IsOptionalWithDefault() = %v, want %v", got, tt.want)
-			}
+			got := tt.v.IsOptionalWithDefault(tt.args.name)
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
