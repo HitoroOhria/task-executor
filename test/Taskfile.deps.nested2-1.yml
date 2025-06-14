@@ -4,9 +4,9 @@ tasks:
   print:
     desc: Print
     cmds:
-      - echo "NESTED2-1_REQUIRED={{.NESTED2-1_REQUIRED}}"
-      - echo "NESTED2-1_OPTIONAL={{.NESTED2-1_OPTIONAL}}"
+      - echo "NESTED2_1_REQUIRED={{.NESTED2_1_REQUIRED}}"
+      - echo "NESTED2_1_OPTIONAL={{.NESTED2_1_OPTIONAL}}"
     vars:
-      NESTED2-1_OPTIONAL: "{{.NESTED2-1_OPTIONAL}}"
+      NESTED2_1_OPTIONAL: "{{.NESTED2_1_OPTIONAL}}"
     requires:
-      vars: [ NESTED2-1_REQUIRED ]
+      vars: [ NESTED2_1_REQUIRED ]

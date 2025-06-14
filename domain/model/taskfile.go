@@ -112,9 +112,9 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 func (tf *Taskfile) CollectAllVars(task *Task) (*Vars, error) {
 	vars := task.Vars.Duplicate()
 	for _, cmd := range task.Cmds.FilterByDependencyTask() {
-		depsTask := tf.Tasks.FindByName(cmd.DependencyTask.Name)
+		depsTask := tf.FindTaskByFullName(cmd.DependencyTask.FullName)
 		if depsTask == nil {
-			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, cmd.DependencyTask.Name)
+			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, cmd.DependencyTask.FullName)
 		}
 
 		vs, err := tf.CollectAllVars(depsTask)
