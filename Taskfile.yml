@@ -26,6 +26,11 @@ tasks:
     cmds:
       - go run ./cmd -taskfile=test/Taskfile.vars.yml
 
+  run:deps:
+    desc: Run deps test program
+    cmds:
+      - go run ./cmd -taskfile=test/Taskfile.deps.yml
+
   run:includes:
     desc: Run vars test program
     cmds:

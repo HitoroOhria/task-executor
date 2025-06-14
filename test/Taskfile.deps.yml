@@ -1,0 +1,38 @@
+version: "3"
+
+vars:
+  DEFAULT_BASE: "default-base"
+
+tasks:
+  no-vars:
+    desc: No vars
+    cmds:
+      - echo "no-vars"
+
+  deps:
+    desc: Has dependency task
+    silent: true
+    cmds:
+      - echo "deps"
+      - task: no-vars
+
+  has-vars:
+    desc: Has vars
+    cmds:
+      - echo "HAS_VARS_REQUIRED={{.HAS_VARS_REQUIRED}}"
+      - echo "HAS_VARS_OPTIONAL={{.HAS_VARS_OPTIONAL}}"
+    vars:
+      HAS_VARS_OPTIONAL: "{{.HAS_VARS_OPTIONAL}}"
+    requires:
+      vars: [ HAS_VARS_REQUIRED ]
+
+  deps-has-vars:
+    desc: Has dependency task
+    silent: true
+    cmds:
+      - echo "DEPS_HAS_VARS_OPTIONAL={{.DEPS_HAS_VARS_OPTIONAL}}"
+      - task: has-vars
+    vars:
+      DEPS_HAS_VARS_OPTIONAL: "{{.DEPS_HAS_VARS}}"
+    requires:
+      vars: [ DEPS_HAS_VARS_REQUIRED ]

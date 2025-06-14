@@ -37,6 +37,19 @@ func NewVars(t *ast.Task, deps *console.Deps) *Vars {
 	}
 }
 
+func (vs *Vars) Duplicate() *Vars {
+	return &Vars{
+		deps:      vs.deps,
+		Requires:  vs.Requires,
+		Optionals: vs.Optionals,
+	}
+}
+
+func (vs *Vars) Merge(target *Vars) {
+	vs.Requires = append(vs.Requires, target.Requires...)
+	vs.Optionals = append(vs.Optionals, target.Optionals...)
+}
+
 // InputtableOptVars は入力可能はオプショナル変数を返す
 func (vs *Vars) InputtableOptVars() []*OptionalVar {
 	ovs := make([]*OptionalVar, 0, len(vs.Optionals))

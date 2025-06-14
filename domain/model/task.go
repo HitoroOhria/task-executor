@@ -1,53 +1,46 @@
 package model
 
 import (
+	"fmt"
+
 	"github.com/HitoroOhria/task-executer/domain/console"
 	"github.com/HitoroOhria/task-executer/domain/value"
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
 type Task struct {
-	t    *ast.Task
-	deps *console.Deps
+	t *ast.Task
 
 	Name     value.TaskName
 	FullName value.FullTaskName
+	Cmds     Cmds
 	Vars     *Vars
 	Selected bool
 }
 
-func NewTask(t *ast.Task, includeNames []string, deps *console.Deps) *Task {
-	name := value.NewTaskName(t.Name())
+func NewTask(t *ast.Task, includeNames []string, deps *console.Deps) (*Task, error) {
+	name, err := value.NewTaskName(t.Name())
+	if err != nil {
+		return nil, fmt.Errorf("value.NewTaskName: %w", err)
+	}
+
 	fullName := value.NewFullTaskNameForIncluded(includeNames, t.Name())
+	cmds, err := NewCmds(t.Cmds, includeNames)
+	if err != nil {
+		return nil, fmt.Errorf("NewCmds: %w", err)
+	}
 	vs := NewVars(t, deps)
 
 	return &Task{
 		t:        t,
-		deps:     deps,
 		Name:     name,
 		FullName: fullName,
+		Cmds:     cmds,
 		Vars:     vs,
 		Selected: false,
-	}
+	}, nil
 }
 
 func (t *Task) Select() {
 	t.Selected = true
-}
-
-func (t *Task) Input() error {
-	return t.Vars.Input()
-}
-
-// CommandArgs はコマンドの引数を組み立てる
-// e.g. { "NAME": "john", "age": "25" } => [NAME="john", age="25"]
-func (t *Task) CommandArgs() []string {
-	return t.Vars.CommandArgs()
-}
-
-func (t *Task) Run(taskfile string) error {
-	t.deps.Printer.LineBreaks()
-	t.deps.Printer.ExecutionTask(taskfile, t.FullName, t.CommandArgs()...)
-
-	return t.deps.Command.RunTask(taskfile, t.FullName, t.CommandArgs()...)
 }

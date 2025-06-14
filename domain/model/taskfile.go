@@ -35,7 +35,10 @@ func NewTaskfile(filePath string, parentIncludeNames []string, deps *console.Dep
 
 	ts := make(Tasks, 0)
 	for _, task := range tf.Tasks.All(NoSort) {
-		t := NewTask(task, parentIncludeNames, deps)
+		t, err := NewTask(task, parentIncludeNames, deps)
+		if err != nil {
+			return nil, fmt.Errorf("NewTask: %w", err)
+		}
 		ts = append(ts, t)
 	}
 
@@ -53,14 +56,14 @@ func NewTaskfile(filePath string, parentIncludeNames []string, deps *console.Dep
 	}, nil
 }
 
-func (tf *Taskfile) FindTaskFullByName(fullName value.FullTaskName) *Task {
+func (tf *Taskfile) FindTaskByFullName(fullName value.FullTaskName) *Task {
 	task := tf.Tasks.FindByFullName(fullName)
 	if task != nil {
 		return task
 	}
 
 	for _, i := range tf.Includes {
-		task = i.Taskfile.FindTaskFullByName(fullName)
+		task = i.Taskfile.FindTaskByFullName(fullName)
 		if task != nil {
 			return task
 		}
@@ -91,7 +94,7 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 		return nil, fmt.Errorf("cmd.SelectTaskName: %w", err)
 	}
 
-	task := tf.FindTaskFullByName(fullName)
+	task := tf.FindTaskByFullName(fullName)
 	if task == nil {
 		return nil, fmt.Errorf("%w: task = %s", ErrTaskNotFound, fullName)
 	}
@@ -101,14 +104,59 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 	return task, nil
 }
 
+// CollectAllVars は、タスクの変数を依存タスクまで再起的に探索して集める
+func (tf *Taskfile) CollectAllVars(task *Task) (*Vars, error) {
+	vars := task.Vars.Duplicate()
+	for _, cmd := range task.Cmds.DependencyTasks() {
+		depsTask := tf.Tasks.FindByName(*cmd.TaskName)
+		if depsTask == nil {
+			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, *cmd.TaskName)
+		}
+
+		vs, err := tf.CollectAllVars(depsTask)
+		if err != nil {
+			return nil, fmt.Errorf("tf.CollectAllVars: %w", err)
+		}
+		vars.Merge(vs)
+	}
+
+	return vars, nil
+}
+
+func (tf *Taskfile) Input(fullName value.FullTaskName) error {
+	task := tf.FindTaskByFullName(fullName)
+	if task == nil {
+		return fmt.Errorf("%w: task = %s", ErrTaskNotFound, fullName)
+	}
+
+	vars, err := tf.CollectAllVars(task)
+	if err != nil {
+		return fmt.Errorf("tf.CollectAllVars: %w", err)
+	}
+
+	err = vars.Input()
+	if err != nil {
+		return fmt.Errorf("vars.Input: %w", err)
+	}
+
+	return nil
+}
+
 func (tf *Taskfile) RunSelectedTask() error {
 	selected := tf.FindSelectedTask()
 	if selected == nil {
 		return fmt.Errorf("%w: selected task not found", ErrTaskNotFound)
 	}
 
-	return selected.Run(tf.FilePath)
+	vars, err := tf.CollectAllVars(selected)
+	if err != nil {
+		return fmt.Errorf("tf.CollectAllVars: %w", err)
+	}
 
+	tf.deps.Printer.LineBreaks()
+	tf.deps.Printer.ExecutionTask(tf.FilePath, selected.FullName, vars.CommandArgs()...)
+
+	return tf.deps.Command.RunTask(tf.FilePath, selected.FullName, vars.CommandArgs()...)
 }
 
 // NoSort
