@@ -25,15 +25,17 @@ Enter "OPTIONAL1"       : bar
 Enter "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2": 
 Enter "DEFAULT1"        : 
 Enter "DEFAULT2"        : 
+Enter "DUPLICATE"       : 
 ---   end   ---
 
-run: task -t test/Taskfile.vars.yml with-all REQUIRED="foo" OPTIONAL1="bar"
+run: task -t test/Taskfile.vars.yml with-all REQUIRED=foo OPTIONAL1=bar
 VALUE=value
 REQUIRED=foo
 OPTIONAL1=bar
 LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=
 DEFAULT1=default1
 DEFAULT2=default-base
+DUPLICATE=
 ```
 
 ## How to use
