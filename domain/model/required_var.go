@@ -45,8 +45,8 @@ func (v *RequiredVar) Arg() string {
 }
 
 // Input は変数の値を入力する
-func (v *RequiredVar) Input(maxNameLen int) error {
-	prompt := v.Prompt.Generate(maxNameLen)
+func (v *RequiredVar) Input(maxDisplayLen int) error {
+	prompt := v.Prompt.Generate(maxDisplayLen, "")
 	value := v.deps.Runner.Input(prompt)
 
 	if value == "" {

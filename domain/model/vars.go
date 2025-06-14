@@ -74,7 +74,7 @@ func (vs *Vars) Input() error {
 		vs.deps.Printer.RequiredHeader()
 
 		for _, r := range vs.Requires.Distinct() {
-			err := r.Input(vs.GetMaxNameLen())
+			err := r.Input(vs.GetMaxRequireVarsDisplayLen())
 			if err != nil {
 				return fmt.Errorf("r.Input: %w", err)
 			}
@@ -85,7 +85,7 @@ func (vs *Vars) Input() error {
 		vs.deps.Printer.OptionalHeader()
 
 		for _, o := range vs.InputtableOptVars().Distinct() {
-			o.Input(vs.GetMaxNameLen())
+			o.Input(vs.GetMaxOptionalVarsDisplayLen())
 		}
 	}
 
@@ -94,17 +94,34 @@ func (vs *Vars) Input() error {
 	return nil
 }
 
-func (vs *Vars) GetMaxNameLen() int {
-	maxLen := 0
-
+func (vs *Vars) GetMaxRequireVarsDisplayLen() int {
+	varDisplays := make([]string, 0)
 	for _, r := range vs.Requires {
-		if len(r.Name) > maxLen {
-			maxLen = len(r.Name)
+		disp := generateVarDisplay(r.Name, "")
+		varDisplays = append(varDisplays, disp)
+	}
+
+	maxLen := 0
+	for _, disp := range varDisplays {
+		if len(disp) > maxLen {
+			maxLen = len(disp)
 		}
 	}
-	for _, o := range vs.InputtableOptVars() {
-		if len(o.Name) > maxLen {
-			maxLen = len(o.Name)
+
+	return maxLen
+}
+
+func (vs *Vars) GetMaxOptionalVarsDisplayLen() int {
+	varDisplays := make([]string, 0)
+	for _, i := range vs.InputtableOptVars() {
+		disp := generateVarDisplay(i.Name, i.Value.Default())
+		varDisplays = append(varDisplays, disp)
+	}
+
+	maxLen := 0
+	for _, disp := range varDisplays {
+		if len(disp) > maxLen {
+			maxLen = len(disp)
 		}
 	}
 

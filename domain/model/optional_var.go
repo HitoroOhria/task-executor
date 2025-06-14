@@ -68,8 +68,8 @@ func (v *OptionalVar) IsInputtable() bool {
 }
 
 // Input は変数の値を入力する
-func (v *OptionalVar) Input(maxNameLen int) {
-	prompt := v.Prompt.Generate(maxNameLen)
+func (v *OptionalVar) Input(maxDisplayLen int) {
+	prompt := v.Prompt.Generate(maxDisplayLen, v.Value.Default())
 	value := v.deps.Runner.Input(prompt)
 
 	v.InputValue = &value

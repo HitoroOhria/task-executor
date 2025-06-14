@@ -6,6 +6,68 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestVarValue_Default(t *testing.T) {
+	tests := []struct {
+		name string
+		v    VarValue
+		want string
+	}{
+		{
+			name: "パイプ経由の default の場合、デフォルト値を返すこと",
+			v:    VarValue(`{{.VARIABLE | default "default-value"}}`),
+			want: "default-value",
+		},
+		{
+			name: "パイプ経由の default であり、空白がない場合、デフォルト値を返すこと",
+			v:    VarValue(`{{.VARIABLE|default "default-value"}}`),
+			want: "default-value",
+		},
+		{
+			name: "パイプ経由の default であり、空白がある場合、デフォルト値を返すこと",
+			v:    VarValue(`{{   .VARIABLE   |   default   "default-value"  }}`),
+			want: "default-value",
+		},
+		{
+			name: "パイプ経由の default であり、デフォルト値が他の変数に依存している場合、空文字を返すこと",
+			v:    VarValue(`{{.VARIABLE | default .ANOTHER}}`),
+			want: "",
+		},
+		{
+			name: "先頭に default がある場合、デフォルト値を返すこと",
+			v:    VarValue(`{{default "default-value" .VARIABLE}}`),
+			want: "default-value",
+		},
+		{
+			name: "先頭に default があり、空白がある場合、デフォルト値を返すこと",
+			v:    VarValue(`{{   default   "default-value"   .VARIABLE  }}`),
+			want: "default-value",
+		},
+		{
+			name: "先頭に default があり、デフォルト値が他の変数に依存している場合、空文字を返すこと",
+			v:    VarValue(`{{default .ANOTHER .VARIABLE}}`),
+			want: "",
+		},
+		{
+			name: "値ありの変数の場合、空文字を返すこと",
+			v:    VarValue(`value`),
+			want: "",
+		},
+		{
+			name: "デフォルト値なしのオプショナル変数の場合、空文字を返すこと",
+			v:    VarValue(`{{.VARIABLE}}`),
+			want: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.v.Default()
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
 func TestVarValue_IsOptional(t *testing.T) {
 	type args struct {
 		name string

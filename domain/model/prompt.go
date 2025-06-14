@@ -2,7 +2,7 @@ package model
 
 import "fmt"
 
-const maxVarPromptWidth = 18
+const maxVarPromptWidth = 20
 
 // Prompt は入力のプロンプト
 // 変数の値を入力する時に利用される
@@ -16,12 +16,21 @@ func NewPrompt(varName string) *Prompt {
 	}
 }
 
-func (p *Prompt) Generate(maxNameLen int) string {
-	pad := maxNameLen + 2 // plus double quote
+func (p *Prompt) Generate(maxDisplayLen int, defaultValue string) string {
+	pad := maxDisplayLen
 	if pad > maxVarPromptWidth {
 		pad = maxVarPromptWidth
 	}
-	name := fmt.Sprintf(`"%s"`, p.VarName)
 
-	return fmt.Sprintf(`Enter %-*s: `, pad, name)
+	varDisplay := generateVarDisplay(p.VarName, defaultValue)
+
+	return fmt.Sprintf(`Enter %-*s: `, pad, varDisplay)
+}
+
+func generateVarDisplay(varName string, defaultValue string) string {
+	if defaultValue == "" {
+		return fmt.Sprintf(`"%s" `, varName)
+	}
+
+	return fmt.Sprintf(`"%s" [%s]`, varName, defaultValue)
 }
