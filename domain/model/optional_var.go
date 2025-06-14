@@ -49,7 +49,7 @@ func (v *OptionalVar) Arg() *string {
 		return nil
 	}
 
-	arg := fmt.Sprintf(`%s="%s"`, v.Name, v.MustInputValue())
+	arg := fmt.Sprintf(`%s=%s`, v.Name, v.MustInputValue())
 	return &arg
 }
 

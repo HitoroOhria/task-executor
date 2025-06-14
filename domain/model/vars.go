@@ -112,7 +112,7 @@ func (vs *Vars) GetMaxNameLen() int {
 }
 
 // CommandArgs はコマンドの引数を組み立てる
-// e.g. { "NAME": "john", "age": "25" } => [NAME="john", age="25"]
+// e.g. { "NAME": "john", "age": "25" } => [NAME=john, age=25]
 func (vs *Vars) CommandArgs() []string {
 	args := make([]string, 0)
 
