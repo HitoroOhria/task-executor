@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  print:
+    desc: Print
+    cmds:
+      - echo "NESTED1_REQUIRED={{.NESTED1_REQUIRED}}"
+      - echo "NESTED1_OPTIONAL={{.NESTED1_OPTIONAL}}"
+    vars:
+      NESTED1_OPTIONAL: "{{.NESTED1_OPTIONAL}}"
+    requires:
+      vars: [ NESTED1_REQUIRED ]

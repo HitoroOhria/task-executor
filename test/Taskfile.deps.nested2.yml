@@ -1,0 +1,17 @@
+version: "3"
+
+includes:
+  nested2-1:
+    taskfile: ./Taskfile.deps.nested2-1.yml
+
+tasks:
+  print:
+    desc: Print
+    cmds:
+      - echo "NESTED2_REQUIRED={{.NESTED2_REQUIRED}}"
+      - echo "NESTED2_OPTIONAL={{.NESTED2_OPTIONAL}}"
+      - task: nested2-1:print
+    vars:
+      NESTED2_OPTIONAL: "{{.NESTED2_OPTIONAL}}"
+    requires:
+      vars: [ NESTED2_REQUIRED ]

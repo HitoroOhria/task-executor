@@ -1,5 +1,11 @@
 version: "3"
 
+includes:
+  nested1:
+    taskfile: ./Taskfile.deps.nested1.yml
+  nested2:
+    taskfile: ./Taskfile.deps.nested2.yml
+
 vars:
   DEFAULT_BASE: "default-base"
 
@@ -53,3 +59,27 @@ tasks:
       DOUBLE_DEPS_HAS_VARS_OPTIONAL: "{{.DOUBLE_DEPS_HAS_VARS_OPTIONAL}}"
     requires:
       vars: [ DOUBLE_DEPS_HAS_VARS_REQUIRED ]
+
+  has-nested:
+    desc: Has nested task
+    silent: true
+    cmds:
+      - echo "HAS_NESTED_REQUIRED={{.HAS_NESTED_REQUIRED}}"
+      - echo "HAS_NESTED_OPTIONAL={{.HAS_NESTED_OPTIONAL}}"
+      - task: nested1:print
+    vars:
+      HAS_NESTED_OPTIONAL: "{{.HAS_NESTED_OPTIONAL}}"
+    requires:
+      vars: [ HAS_NESTED_REQUIRED ]
+
+  has-double-nested:
+    desc: Has double nested task
+    silent: true
+    cmds:
+      - echo "HAS_DOUBLE_NESTED_REQUIRED={{.HAS_DOUBLE_NESTED_REQUIRED}}"
+      - echo "HAS_DOUBLE_NESTED_OPTIONAL={{.HAS_DOUBLE_NESTED_OPTIONAL}}"
+      - task: nested2:print
+    vars:
+      HAS_DOUBLE_NESTED_OPTIONAL: "{{.HAS_DOUBLE_NESTED_OPTIONAL}}"
+    requires:
+      vars: [ HAS_DOUBLE_NESTED_REQUIRED ]
