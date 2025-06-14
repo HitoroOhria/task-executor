@@ -4,6 +4,8 @@ import "fmt"
 
 const maxVarPromptWidth = 18
 
+// Prompt は入力のプロンプト
+// 変数の値を入力する時に利用される
 type Prompt struct {
 	VarName string
 }

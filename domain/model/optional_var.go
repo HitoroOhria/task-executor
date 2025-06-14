@@ -7,6 +7,8 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// OptionalVar はオプショナル変数
+// required ではない変数のこと
 type OptionalVar struct {
 	v    *ast.Var
 	deps *console.Deps
@@ -39,6 +41,9 @@ func (v *OptionalVar) MustInputValue() string {
 	return *v.InputValue
 }
 
+// Arg は引数を返す
+// 引数は "<var_name>=<var_value>" の形式である
+// 変数が未入力の場合、nil を返す
 func (v *OptionalVar) Arg() *string {
 	if v.InputValue == nil || *v.InputValue == "" {
 		return nil
@@ -48,7 +53,9 @@ func (v *OptionalVar) Arg() *string {
 	return &arg
 }
 
-// IsInputtable は変数の値が入力可能かを判定する
+// IsInputtable は変数が入力可能かを判定する
+// 入力可能な形式は "{{.VARIABLE}}" のような値である場合である
+// 固定値がセットされている場合や、コマンド結果などの場合は入力可能ではない
 func (v *OptionalVar) IsInputtable() bool {
 	if v.Value.IsOptional(v.Name) {
 		return true
@@ -60,6 +67,7 @@ func (v *OptionalVar) IsInputtable() bool {
 	return false
 }
 
+// Input は変数の値を入力する
 func (v *OptionalVar) Input(maxNameLen int) {
 	prompt := v.Prompt.Generate(maxNameLen)
 	value := v.deps.Command.Input(prompt)

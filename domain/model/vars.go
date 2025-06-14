@@ -7,7 +7,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
-// Vars は変数名と値のセット
+// Vars は変数の集合
 type Vars struct {
 	deps *console.Deps
 

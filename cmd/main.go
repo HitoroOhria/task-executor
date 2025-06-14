@@ -60,7 +60,7 @@ func main() {
 		return
 	}
 
-	err = tf.Input(task.FullName)
+	err = tf.InputVars(task.FullName)
 	if err != nil {
 		handleError(err, "failed to input task vars")
 		return

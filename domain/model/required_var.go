@@ -7,6 +7,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// RequiredVar は必須変数
 type RequiredVar struct {
 	v    *ast.VarsWithValidation
 	deps *console.Deps
@@ -36,10 +37,14 @@ func (v *RequiredVar) MustInputValue() string {
 	return *v.InputValue
 }
 
+// Arg は引数を返す
+// 引数は "<var_name>=<var_value>" の形式である
+// 変数が未入力の場合、nil を返す
 func (v *RequiredVar) Arg() string {
 	return fmt.Sprintf(`%s="%s"`, v.Name, v.MustInputValue())
 }
 
+// Input は変数の値を入力する
 func (v *RequiredVar) Input(maxNameLen int) error {
 	prompt := v.Prompt.Generate(maxNameLen)
 	value := v.deps.Command.Input(prompt)

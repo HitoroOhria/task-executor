@@ -2,6 +2,7 @@ package model
 
 import "github.com/HitoroOhria/task-executer/domain/value"
 
+// Tasks はタスク集合
 type Tasks []*Task
 
 func (ts Tasks) FindByName(name value.TaskName) *Task {

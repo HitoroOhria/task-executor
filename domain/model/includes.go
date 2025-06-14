@@ -8,6 +8,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// Include は Taskfile の包含
 type Include struct {
 	Name     string
 	Taskfile *Taskfile
@@ -20,6 +21,7 @@ func NewInclude(name string, taskfile *Taskfile) *Include {
 	}
 }
 
+// Includes は Taskfile の包含の集合
 type Includes []*Include
 
 func NewIncludes(parentTaskfilePath string, includes *ast.Includes, parentIncludeNames []string, deps *console.Deps) (Includes, error) {

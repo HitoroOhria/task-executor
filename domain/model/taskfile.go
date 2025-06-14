@@ -56,6 +56,7 @@ func NewTaskfile(filePath string, parentIncludeNames []string, deps *console.Dep
 	}, nil
 }
 
+// FindTaskByFullName は完全タスク名に一致するタスクを探す
 func (tf *Taskfile) FindTaskByFullName(fullName value.FullTaskName) *Task {
 	task := tf.Tasks.FindByFullName(fullName)
 	if task != nil {
@@ -72,6 +73,7 @@ func (tf *Taskfile) FindTaskByFullName(fullName value.FullTaskName) *Task {
 	return nil
 }
 
+// FindSelectedTask は選択されたタスクを探す
 func (tf *Taskfile) FindSelectedTask() *Task {
 	found := tf.Tasks.FindSelected()
 	if found != nil {
@@ -88,6 +90,7 @@ func (tf *Taskfile) FindSelectedTask() *Task {
 	return nil
 }
 
+// SelectTask はタスクを選択する
 func (tf *Taskfile) SelectTask() (*Task, error) {
 	fullName, err := tf.deps.Command.SelectTaskName(tf.FilePath)
 	if err != nil {
@@ -123,7 +126,8 @@ func (tf *Taskfile) CollectAllVars(task *Task) (*Vars, error) {
 	return vars, nil
 }
 
-func (tf *Taskfile) Input(fullName value.FullTaskName) error {
+// InputVars はタスクの変数を入力する
+func (tf *Taskfile) InputVars(fullName value.FullTaskName) error {
 	task := tf.FindTaskByFullName(fullName)
 	if task == nil {
 		return fmt.Errorf("%w: task = %s", ErrTaskNotFound, fullName)
@@ -142,6 +146,7 @@ func (tf *Taskfile) Input(fullName value.FullTaskName) error {
 	return nil
 }
 
+// RunSelectedTask は選択されたタスクを実行する
 func (tf *Taskfile) RunSelectedTask() error {
 	selected := tf.FindSelectedTask()
 	if selected == nil {

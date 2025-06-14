@@ -8,6 +8,7 @@ import (
 	"github.com/go-task/task/v3/taskfile/ast"
 )
 
+// Task はタスク
 type Task struct {
 	t *ast.Task
 
@@ -41,6 +42,7 @@ func NewTask(t *ast.Task, includeNames []string, deps *console.Deps) (*Task, err
 	}, nil
 }
 
+// Select はタスクを選択する
 func (t *Task) Select() {
 	t.Selected = true
 }
