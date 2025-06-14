@@ -25,7 +25,7 @@ func NewTask(t *ast.Task, includeNames []string, deps *console.Deps) (*Task, err
 		return nil, fmt.Errorf("value.NewTaskName: %w", err)
 	}
 
-	fullName := value.NewFullTaskNameForIncluded(includeNames, t.Name())
+	fullName := value.NewIncludedFullTaskName(includeNames, t.Name())
 	cmds, err := NewCmds(t.Cmds, includeNames)
 	if err != nil {
 		return nil, fmt.Errorf("NewCmds: %w", err)

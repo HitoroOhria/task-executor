@@ -30,7 +30,7 @@ func NewCmd(cmd *ast.Cmd, includeNames []string) (*Cmd, error) {
 		if err != nil {
 			return nil, fmt.Errorf("value.NewTaskName: %w", err)
 		}
-		fullName := value.NewFullTaskNameForIncluded(includeNames, cmd.Task)
+		fullName := value.NewIncludedFullTaskName(includeNames, cmd.Task)
 
 		dependencyTask = &DependencyTask{
 			Name:     name,

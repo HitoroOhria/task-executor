@@ -12,6 +12,7 @@ import (
 
 var ErrTaskNotFound = errors.New("task not found")
 
+// Taskfile はタスクファイル
 type Taskfile struct {
 	tf   *ast.Taskfile
 	deps *console.Deps

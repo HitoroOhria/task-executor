@@ -4,6 +4,7 @@ package console
 
 import "github.com/HitoroOhria/task-executer/domain/value"
 
+// Printer は文字を出力するもの
 type Printer interface {
 	RequiredHeader()
 	OptionalHeader()
