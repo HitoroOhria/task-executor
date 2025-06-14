@@ -4,20 +4,22 @@ vars:
   DEFAULT_BASE: "default-base"
 
 tasks:
-  no-vars:
-    desc: No vars
+  print:
+    desc: Print
+    internal: true
     cmds:
-      - echo "no-vars"
+      - echo "print"
 
   deps:
     desc: Has dependency task
     silent: true
     cmds:
       - echo "deps"
-      - task: no-vars
+      - task: print
 
   has-vars:
     desc: Has vars
+    internal: true
     cmds:
       - echo "HAS_VARS_REQUIRED={{.HAS_VARS_REQUIRED}}"
       - echo "HAS_VARS_OPTIONAL={{.HAS_VARS_OPTIONAL}}"
