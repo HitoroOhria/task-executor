@@ -6,6 +6,7 @@ vars:
 tasks:
   print:
     desc: Print
+    silent: true
     internal: true
     cmds:
       - echo "print"
@@ -19,6 +20,7 @@ tasks:
 
   has-vars:
     desc: Has vars
+    silent: true
     internal: true
     cmds:
       - echo "HAS_VARS_REQUIRED={{.HAS_VARS_REQUIRED}}"
@@ -39,3 +41,15 @@ tasks:
       DEPS_HAS_VARS_OPTIONAL: "{{.DEPS_HAS_VARS_OPTIONAL}}"
     requires:
       vars: [ DEPS_HAS_VARS_REQUIRED ]
+
+  double-deps-has-vars:
+    desc: Has double dependency task
+    silent: true
+    cmds:
+      - echo "DOUBLE_DEPS_HAS_VARS_REQUIRED={{.DOUBLE_DEPS_HAS_VARS_REQUIRED}}"
+      - echo "DOUBLE_DEPS_HAS_VARS_OPTIONAL={{.DOUBLE_DEPS_HAS_VARS_OPTIONAL}}"
+      - task: deps-has-vars
+    vars:
+      DOUBLE_DEPS_HAS_VARS_OPTIONAL: "{{.DOUBLE_DEPS_HAS_VARS_OPTIONAL}}"
+    requires:
+      vars: [ DOUBLE_DEPS_HAS_VARS_REQUIRED ]
