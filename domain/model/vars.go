@@ -20,9 +20,6 @@ type Vars struct {
 	Optionals OptionalVars
 }
 
-type RequiredVars []*RequiredVar
-type OptionalVars []*OptionalVar
-
 func NewVars(t *ast.Task, deps *console.Deps) *Vars {
 	rvs := make(RequiredVars, 0)
 	if t.Requires != nil {
@@ -176,50 +173,4 @@ func (vs *Vars) CommandArgs() []string {
 	}
 
 	return args
-}
-
-func (vs RequiredVars) existByName(name string) bool {
-	for _, v := range vs {
-		if v.Name == name {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (vs RequiredVars) Distinct() RequiredVars {
-	vars := make(RequiredVars, 0, len(vs))
-	for _, v := range vs {
-		if vars.existByName(v.Name) {
-			continue
-		}
-
-		vars = append(vars, v)
-	}
-
-	return vars
-}
-
-func (vs OptionalVars) existByName(name string) bool {
-	for _, v := range vs {
-		if v.Name == name {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (vs OptionalVars) Distinct() OptionalVars {
-	vars := make(OptionalVars, 0, len(vs))
-	for _, v := range vs {
-		if vars.existByName(v.Name) {
-			continue
-		}
-
-		vars = append(vars, v)
-	}
-
-	return vars
 }
