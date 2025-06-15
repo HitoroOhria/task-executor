@@ -26,19 +26,25 @@ var ellipsisLen = utf8.RuneCountInString(ellipsis)
 
 type VarInputter struct {
 	textInputs []textinput.Model
+	cursor     int // number of row index
 
-	Cursor        int // number of row index
-	Names         []string
-	Requires      []bool
-	DefaultValues []string
-	Values        []string
+	Vars []Var
+}
+
+type Var struct {
+	Name         string
+	Required     bool
+	DefaultValue string
+	InputValue   string
 }
 
 func initVarInputter() VarInputter {
-	vars := []string{"OPTIONAL", "REQUIRED", "HAS_DEFAULT", "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG"}
-	requires := []bool{false, true, false, false}
-	defaultValues := []string{"", "", "foo", "Lorem Ipsum is simply dummy text of the printing and typesetting industry"}
-	values := []string{"", "", "", ""}
+	vars := []Var{
+		{"OPTIONAL", false, "", ""},
+		{"REQUIRED", true, "", ""},
+		{"HAS_DEFAULT", false, "foo", ""},
+		{"LOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG", false, "Lorem Ipsum is simply dummy text of the printing and typesetting industry", ""},
+	}
 
 	tis := make([]textinput.Model, len(vars))
 	for i, _ := range vars {
@@ -53,12 +59,9 @@ func initVarInputter() VarInputter {
 	}
 
 	return VarInputter{
-		textInputs:    tis,
-		Names:         vars,
-		Requires:      requires,
-		DefaultValues: defaultValues,
-		Values:        values,
-		Cursor:        0,
+		textInputs: tis,
+		Vars:       vars,
+		cursor:     0,
 	}
 }
 
@@ -87,9 +90,9 @@ func (m VarInputter) Separator() string {
 
 func (m VarInputter) NameColumnLen() int {
 	var maxLen int
-	for _, n := range m.Names {
-		if len(n) > maxLen {
-			maxLen = len(n)
+	for _, v := range m.Vars {
+		if len(v.Name) > maxLen {
+			maxLen = len(v.Name)
 		}
 	}
 	if maxLen > maxNameWidth {
@@ -105,9 +108,9 @@ func (m VarInputter) RequiredColumnLen() int {
 
 func (m VarInputter) DefaultValueColumnLen() int {
 	var maxLen int
-	for _, d := range m.DefaultValues {
-		if len(d) > maxLen {
-			maxLen = len(d)
+	for _, v := range m.Vars {
+		if len(v.DefaultValue) > maxLen {
+			maxLen = len(v.DefaultValue)
 		}
 	}
 
@@ -131,16 +134,16 @@ func (m VarInputter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
 			return m, tea.Quit
 		case tea.KeyUp:
-			if m.Cursor > 0 {
-				m.textInputs[m.Cursor].Blur()
-				m.Cursor--
-				m.textInputs[m.Cursor].Focus()
+			if m.cursor > 0 {
+				m.textInputs[m.cursor].Blur()
+				m.cursor--
+				m.textInputs[m.cursor].Focus()
 			}
 		case tea.KeyDown:
-			if m.Cursor < len(m.Names)-1 {
-				m.textInputs[m.Cursor].Blur()
-				m.Cursor++
-				m.textInputs[m.Cursor].Focus()
+			if m.cursor < len(m.Vars)-1 {
+				m.textInputs[m.cursor].Blur()
+				m.cursor++
+				m.textInputs[m.cursor].Focus()
 			}
 		default:
 			for i, ti := range m.textInputs {
@@ -154,7 +157,7 @@ func (m VarInputter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	for i, ti := range m.textInputs {
-		m.Values[i] = ti.Value()
+		m.Vars[i].InputValue = ti.Value()
 	}
 
 	return m, cmd
@@ -177,15 +180,15 @@ func (m VarInputter) View() string {
 
 	s += m.Separator() + "\n"
 
-	for i, name := range m.Names {
-		name := truncate(name, maxNameWidth)
+	for i, v := range m.Vars {
+		name := truncate(v.Name, maxNameWidth)
 
 		required := ""
-		if m.Requires[i] {
+		if v.Required {
 			required = " ✓ "
 		}
 
-		defaultValue := m.DefaultValues[i]
+		defaultValue := v.DefaultValue
 		if defaultValue != "" {
 			truncated := truncate(defaultValue, maxDefaultValueWidth)
 			defaultValue = fmt.Sprintf("[%s]", truncated)
@@ -209,14 +212,15 @@ func (m VarInputter) View() string {
 }
 
 func (m VarInputter) GetValues() []string {
-	vs := make([]string, len(m.Names))
-	for i, value := range m.Values {
-		if value == "" {
-			vs[i] = m.DefaultValues[i]
+	values := make([]string, len(m.Vars))
+	for i, v := range m.Vars {
+		if v.InputValue == "" {
+			values[i] = v.DefaultValue
 			continue
 		}
-		vs[i] = value
+
+		values[i] = v.InputValue
 	}
 
-	return vs
+	return values
 }
