@@ -41,6 +41,13 @@ tasks:
     cmds:
       - go run ./cmd -taskfile=test/Taskfile.all.yml
 
+  run:poc:
+    desc: Run poc program
+    cmds:
+      - go run ./poc/bubbletea -target={{.TARGET}}
+    vars:
+      TARGET: '{{.TARGET | default "varInputter"}}'
+
   fmt:
     desc: Format go program
     cmds:
