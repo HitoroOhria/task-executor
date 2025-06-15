@@ -43,7 +43,7 @@ func (v *RequiredVar) Arg() string {
 	return makeArg(v.Name, v.MustInputValue())
 }
 
-// Input は変数の値を入力する
+// Deprecated: Input は変数の値を入力する
 func (v *RequiredVar) Input(maxDisplayLen int) error {
 	prompt := v.Prompt.Generate(maxDisplayLen, "")
 	value := v.deps.Runner.Input(prompt)

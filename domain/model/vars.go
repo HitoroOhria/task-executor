@@ -122,6 +122,7 @@ func (vs *Vars) Input() error {
 	return nil
 }
 
+// Deprecated: GetMaxRequireVarsDisplayLen は入力変数の表示最大長さを返す
 func (vs *Vars) GetMaxRequireVarsDisplayLen() int {
 	varDisplays := make([]string, 0)
 	for _, r := range vs.Requires {
@@ -139,6 +140,7 @@ func (vs *Vars) GetMaxRequireVarsDisplayLen() int {
 	return maxLen
 }
 
+// Deprecated: GetMaxOptionalVarsDisplayLen は入力変数の表示最大長さを返す
 func (vs *Vars) GetMaxOptionalVarsDisplayLen() int {
 	varDisplays := make([]string, 0)
 	for _, i := range vs.InputtableOptVars() {

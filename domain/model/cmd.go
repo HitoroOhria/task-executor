@@ -13,6 +13,7 @@ type Cmd struct {
 	DependencyTask *DependencyTask
 }
 
+// DependencyTask は依存タスクのコマンド
 type DependencyTask struct {
 	Name     value.TaskName
 	FullName value.FullTaskName

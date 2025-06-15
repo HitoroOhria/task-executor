@@ -76,7 +76,7 @@ func (v *OptionalVar) IsInputtable() bool {
 	return false
 }
 
-// Input は変数の値を入力する
+// Deprecated: Input は変数の値を入力する
 func (v *OptionalVar) Input(maxDisplayLen int) {
 	prompt := v.Prompt.Generate(maxDisplayLen, v.Value.Default())
 	value := v.deps.Runner.Input(prompt)
