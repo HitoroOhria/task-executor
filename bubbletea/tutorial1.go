@@ -12,7 +12,7 @@ type model1 struct {
 	selected map[int]struct{} // which to-do items are selected
 }
 
-func initialModel() model1 {
+func initialModel1() model1 {
 	return model1{
 		// Our to-do list is a grocery list
 		choices: []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
