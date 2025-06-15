@@ -44,12 +44,21 @@ func (v *OptionalVar) MustInputValue() string {
 // Arg は引数を返す
 // 引数は "<var_name>=<var_value>" の形式である
 // 変数が未入力の場合、nil を返す
+// 変数が見入力であり、デフォルト値がある場合、デフォルト値の引数を返す
 func (v *OptionalVar) Arg() *string {
-	if v.InputValue == nil || *v.InputValue == "" {
+	var value string
+	if v.InputValue != nil && *v.InputValue != "" {
+		value = *v.InputValue
+	}
+	if value == "" && v.Value.Default() != "" {
+		value = v.Value.Default()
+	}
+
+	if value == "" {
 		return nil
 	}
 
-	arg := fmt.Sprintf(`%s=%s`, v.Name, v.MustInputValue())
+	arg := makeArg(v.Name, value)
 	return &arg
 }
 

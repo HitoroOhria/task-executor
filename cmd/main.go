@@ -19,6 +19,7 @@ func init() {
 	deps = console.NewDeps(
 		adapter.NewRunner(),
 		adapter.NewPrinter(),
+		adapter.NewVariableInputter(),
 	)
 }
 

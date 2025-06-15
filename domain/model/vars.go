@@ -1,10 +1,15 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/HitoroOhria/task-executor/domain/console"
 	"github.com/go-task/task/v3/taskfile/ast"
+)
+
+var (
+	ErrRequiredVarIsEmpty = errors.New("required variable is empty")
 )
 
 // Vars は変数の集合
@@ -40,6 +45,10 @@ func NewVars(t *ast.Task, deps *console.Deps) *Vars {
 	}
 }
 
+func (vs *Vars) inputtableLen() int {
+	return len(vs.Requires) + len(vs.InputtableOptVars())
+}
+
 func (vs *Vars) Duplicate() *Vars {
 	return &Vars{
 		deps:      vs.deps,
@@ -70,26 +79,45 @@ func (vs *Vars) Input() error {
 		return nil
 	}
 
+	vars := make([]*console.Variable, 0, vs.inputtableLen())
 	if len(vs.Requires) != 0 {
-		vs.deps.Printer.RequiredHeader()
-
 		for _, r := range vs.Requires.Distinct() {
-			err := r.Input(vs.GetMaxRequireVarsDisplayLen())
-			if err != nil {
-				return fmt.Errorf("r.Input: %w", err)
+			vars = append(vars, console.NewVariable(r.Name, true, ""))
+		}
+	}
+	if len(vs.InputtableOptVars()) != 0 {
+		for _, o := range vs.InputtableOptVars().Distinct() {
+			vars = append(vars, console.NewVariable(o.Name, false, o.Value.Default()))
+		}
+	}
+
+	results, err := vs.deps.VariableInputter.Input(vars)
+	if err != nil {
+		return fmt.Errorf("vs.deps.VariableInputter.Input: %w", err)
+	}
+
+	for _, result := range results {
+		if result.Required {
+			for _, r := range vs.Requires {
+				if r.Name != result.Name {
+					continue
+				}
+
+				if result.InputValue == "" {
+					return ErrRequiredVarIsEmpty
+				}
+				r.InputValue = &result.InputValue
 			}
 		}
-	}
 
-	if len(vs.InputtableOptVars()) != 0 {
-		vs.deps.Printer.OptionalHeader()
+		for _, o := range vs.InputtableOptVars() {
+			if o.Name != result.Name {
+				continue
+			}
 
-		for _, o := range vs.InputtableOptVars().Distinct() {
-			o.Input(vs.GetMaxOptionalVarsDisplayLen())
+			o.InputValue = &result.InputValue
 		}
 	}
-
-	vs.deps.Printer.EndLine()
 
 	return nil
 }

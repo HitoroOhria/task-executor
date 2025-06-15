@@ -139,6 +139,8 @@ func (tf *Taskfile) InputVars(fullName value.FullTaskName) error {
 		return fmt.Errorf("tf.CollectAllVars: %w", err)
 	}
 
+	tf.deps.Printer.LineBreaks()
+
 	err = vars.Input()
 	if err != nil {
 		return fmt.Errorf("vars.Input: %w", err)

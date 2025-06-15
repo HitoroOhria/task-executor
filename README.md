@@ -5,9 +5,9 @@
 
 ```shell
 $ task run:vars
-task: [run] go run ./cmd -taskfile=test/Taskfile.vars.yml
+task: [run:vars] go run ./cmd -taskfile=test/Taskfile.vars.yml
 
-# select task
+# 1. select task
 QUERY>
  simple:                  Simple command                                                                                                                                                                                                                   
  with-vars:               Command with vars
@@ -17,18 +17,22 @@ QUERY>
  with-long-vars:          Command with long vars
  with-all:                Command with all pattern
 
-# select with-all
---- required ---
-Enter "REQUIRED"        : foo
---- optional ---
-Enter "OPTIONAL1"       : bar
-Enter "LOOOOOOOOOOOOOOOOOONG_OPTIONAL2": 
-Enter "DEFAULT1"        : 
-Enter "DEFAULT2"        : 
-Enter "DUPLICATE"       : 
----   end   ---
+# 2. input value
+Input variable values.
 
-run: task -t test/Taskfile.vars.yml with-all REQUIRED=foo OPTIONAL1=bar
+Variable            Req.  Def.        Value               
+──────────────────────────────────────────────────────────
+REQUIRED             ✓                foo                  
+OPTIONAL1                             bar                  
+LOOOOOOOOOOOOOOOO…                                         
+DEFAULT1                  [default1]                       
+DEFAULT2                                                   
+DUPLICATE                                                  
+
+(enter to finish)
+
+# 3. run task
+run: task -t test/Taskfile.vars.yml with-all REQUIRED=foo OPTIONAL1=bar DEFAULT1=default1
 VALUE=value
 REQUIRED=foo
 OPTIONAL1=bar

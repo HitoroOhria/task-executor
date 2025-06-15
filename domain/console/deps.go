@@ -1,13 +1,15 @@
 package console
 
 type Deps struct {
-	Runner  Runner
-	Printer Printer
+	Runner           Runner
+	Printer          Printer
+	VariableInputter VariableInputter
 }
 
-func NewDeps(runner Runner, printer Printer) *Deps {
+func NewDeps(runner Runner, printer Printer, variableInputter VariableInputter) *Deps {
 	return &Deps{
-		Runner:  runner,
-		Printer: printer,
+		Runner:           runner,
+		Printer:          printer,
+		VariableInputter: variableInputter,
 	}
 }
