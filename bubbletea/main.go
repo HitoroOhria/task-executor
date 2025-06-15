@@ -71,8 +71,14 @@ func runTable() {
 
 func runVarInputter() {
 	p := tea.NewProgram(initVarInputter())
-	if _, err := p.Run(); err != nil {
+	result, err := p.Run()
+	if err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)
 		os.Exit(1)
+	}
+
+	vi, ok := result.(VarInputter)
+	if ok {
+		fmt.Printf("result: %v", vi.GetValues())
 	}
 }
