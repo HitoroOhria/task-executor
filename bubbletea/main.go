@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -17,6 +18,8 @@ func main() {
 		runTutorial1()
 	case "tutorial2":
 		runTutorial2()
+	case "textInput":
+		runTextInput()
 	case "textInputs":
 		runTextInputs()
 	case "table":
@@ -40,6 +43,13 @@ func runTutorial2() {
 	if _, err := tea.NewProgram(model2{}).Run(); err != nil {
 		fmt.Printf("Uh oh, there was an error: %v\n", err)
 		os.Exit(1)
+	}
+}
+
+func runTextInput() {
+	p := tea.NewProgram(initialTextInput())
+	if _, err := p.Run(); err != nil {
+		log.Fatal(err)
 	}
 }
 
