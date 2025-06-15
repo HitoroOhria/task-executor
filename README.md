@@ -53,13 +53,14 @@ $ ./main
 
 - [x] 必須な変数を入力できるようにする
 - [x] デフォルト値付きのオプショナルな変数を入力できるようにする
-- [ ] 入力プロンプトにデフォルト値の値を入力する
+- [x] 入力プロンプトにデフォルト値の値を入力する
 - [x] 依存先のタスクの変数も入力できるようにする
 - [x] include した Taskfile に対応する
+- [x] リッチ TUI で変数を入力する
 
 ## Development
 
-Run program via Taskfiel.
+Run program via Taskfile.
 
 ```shell
 $ task run TF="<taskfile>"
@@ -103,3 +104,5 @@ $ task run:all
     - 欲張った結果、`domain/console` -> `domain/value` への依存が発生した
     - モデルと CLI 操作を密結合させたため、`domain/model` -> `domain/console` への依存が発生している
     - オニオンアーキテクチャの `domain/repository` と比べると依存の方向が逆になっており、危ういバランスだと感じる
+- TUI 開発が楽しすぎた
+  - [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) に感謝
