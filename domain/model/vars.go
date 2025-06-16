@@ -119,42 +119,6 @@ func (vs *Vars) Input() error {
 	return nil
 }
 
-// Deprecated: GetMaxRequireVarsDisplayLen は入力変数の表示最大長さを返す
-func (vs *Vars) GetMaxRequireVarsDisplayLen() int {
-	varDisplays := make([]string, 0)
-	for _, r := range vs.Requires {
-		disp := generateVarDisplay(r.Name, "")
-		varDisplays = append(varDisplays, disp)
-	}
-
-	maxLen := 0
-	for _, disp := range varDisplays {
-		if len(disp) > maxLen {
-			maxLen = len(disp)
-		}
-	}
-
-	return maxLen
-}
-
-// Deprecated: GetMaxOptionalVarsDisplayLen は入力変数の表示最大長さを返す
-func (vs *Vars) GetMaxOptionalVarsDisplayLen() int {
-	varDisplays := make([]string, 0)
-	for _, i := range vs.InputtableOptVars() {
-		disp := generateVarDisplay(i.Name, i.Value.Default())
-		varDisplays = append(varDisplays, disp)
-	}
-
-	maxLen := 0
-	for _, disp := range varDisplays {
-		if len(disp) > maxLen {
-			maxLen = len(disp)
-		}
-	}
-
-	return maxLen
-}
-
 // CommandArgs はコマンドの引数を組み立てる
 // e.g. { "NAME": "john", "age": "25" } => [NAME=john, age=25]
 func (vs *Vars) CommandArgs() []string {

@@ -6,9 +6,6 @@ import "github.com/HitoroOhria/task-executor/domain/value"
 
 // Printer は文字を出力するもの
 type Printer interface {
-	RequiredHeader()
-	OptionalHeader()
-	EndLine()
 	LineBreaks()
 	ExecutionTask(taskfile string, fullName value.FullTaskName, args ...string)
 }

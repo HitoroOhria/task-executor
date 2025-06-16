@@ -15,20 +15,17 @@ type OptionalVar struct {
 
 	Name       string
 	Value      VarValue
-	Prompt     *Prompt
 	InputValue *string
 }
 
 func NewOptionalVar(name string, v *ast.Var, deps *console.Deps) *OptionalVar {
 	value := NewVarValue(v.Value)
-	prompt := NewPrompt(name)
 
 	return &OptionalVar{
 		v:          v,
 		deps:       deps,
 		Name:       name,
 		Value:      value,
-		Prompt:     prompt,
 		InputValue: nil,
 	}
 }
@@ -74,12 +71,4 @@ func (v *OptionalVar) IsInputtable() bool {
 	}
 
 	return false
-}
-
-// Deprecated: Input は変数の値を入力する
-func (v *OptionalVar) Input(maxDisplayLen int) {
-	prompt := v.Prompt.Generate(maxDisplayLen, v.Value.Default())
-	value := v.deps.Runner.Input(prompt)
-
-	v.InputValue = &value
 }

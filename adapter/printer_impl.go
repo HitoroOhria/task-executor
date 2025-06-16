@@ -21,18 +21,6 @@ func NewPrinter() console.Printer {
 	return &PrinterImpl{}
 }
 
-func (p *PrinterImpl) RequiredHeader() {
-	color.Magenta(requiredHeader)
-}
-
-func (p *PrinterImpl) OptionalHeader() {
-	color.Cyan(optionalHeader)
-}
-
-func (p *PrinterImpl) EndLine() {
-	color.White(endLine)
-}
-
 func (p *PrinterImpl) LineBreaks() {
 	fmt.Println()
 }
