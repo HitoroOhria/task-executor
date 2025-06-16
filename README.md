@@ -3,13 +3,15 @@
 [Task](https://taskfile.dev/) のタスクをインクリメンタルサーチで実行する。
 タスクの変数がある場合、その変数の値を指定することができる。
 
+![CleanShot_2025-06-16_11-24-01](https://github.com/user-attachments/assets/5617d746-527c-4f26-83f0-d10a39866114)
+
 ```shell
 $ task run:vars
 task: [run:vars] go run ./cmd -taskfile=test/Taskfile.vars.yml
 
 # 1. select task
 QUERY>
- simple:                  Simple command                                                                                                                                                                                                                   
+ simple:                  Simple command
  with-vars:               Command with vars
  with-optional-vars:      Command with optional vars
  with-default-vars:       Command with default vars
@@ -32,11 +34,18 @@ DUPLICATE
 (enter to finish)
 
 # 3. run task
-run: task -t test/Taskfile.vars.yml with-all REQUIRED=foo OPTIONAL1=bar DEFAULT1=default1
+┌─────────────────────────────────────────────┐
+│ [run]                                       │
+│ task -t test/Taskfile.vars.yml with-all \   │
+│     REQUIRED=foo \                          │
+│     OPTIONAL1=bar \                         │
+│     LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=baz \   │
+│     DEFAULT1=default1                       │
+└─────────────────────────────────────────────┘
 VALUE=value
 REQUIRED=foo
 OPTIONAL1=bar
-LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=
+LOOOOOOOOOOOOOOOOOONG_OPTIONAL2=baz
 DEFAULT1=default1
 DEFAULT2=default-base
 DUPLICATE=
