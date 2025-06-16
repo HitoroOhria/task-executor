@@ -12,7 +12,7 @@ tasks:
   build:
     desc: Build go program
     cmds:
-      - go build -o main ./cmd
+      - go build -o task-executor ./cmd
 
   run:
     desc: Run go program
