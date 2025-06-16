@@ -66,6 +66,9 @@ $ ./main
 - [x] 依存先のタスクの変数も入力できるようにする
 - [x] include した Taskfile に対応する
 - [x] リッチ TUI で変数を入力する
+- [ ] ANSI エスケープシーケンスの入力を回避する
+  - https://chatgpt.com/c/684ed0d9-346c-8003-b05d-7cf2f1e4effc
+- [ ] インクリメンタルサーチの TUI を実装する
 - [ ] より実践的な形式に対応する
 
 ## Development
