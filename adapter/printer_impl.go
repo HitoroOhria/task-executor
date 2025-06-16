@@ -6,7 +6,7 @@ import (
 
 	"github.com/HitoroOhria/task-executor/domain/console"
 	"github.com/HitoroOhria/task-executor/domain/value"
-	"github.com/fatih/color"
+	"github.com/charmbracelet/lipgloss"
 )
 
 const (
@@ -26,5 +26,40 @@ func (p *PrinterImpl) LineBreaks() {
 }
 
 func (p *PrinterImpl) ExecutionTask(taskfile string, fullName value.FullTaskName, args ...string) {
-	color.White("run: task -t %s %s %s\n", taskfile, fullName, strings.Join(args, " "))
+	command := fmt.Sprintf("task -t %s %s", taskfile, fullName)
+	if len(args) != 0 {
+		command += ` \`
+	}
+	run := "[run]"
+	lines := append([]string{run, command}, makeFormattedArgs(args)...)
+
+	lineStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("231")) // 白
+
+	var styledLines []string
+	for _, line := range lines {
+		styledLines = append(styledLines, lineStyle.Render(line))
+	}
+
+	borderStyle := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		Padding(0, 3, 0, 1)
+
+	content := strings.Join(styledLines, "\n")
+	box := borderStyle.Render(content)
+
+	fmt.Println(box)
+}
+
+func makeFormattedArgs(args []string) []string {
+	formattedArgs := make([]string, 0, len(args))
+	for i, arg := range args {
+		formatted := fmt.Sprintf("    %s", arg)
+		if i != len(args)-1 {
+			formatted += ` \`
+		}
+		formattedArgs = append(formattedArgs, formatted)
+	}
+
+	return formattedArgs
 }
