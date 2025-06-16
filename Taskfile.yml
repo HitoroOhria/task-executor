@@ -41,12 +41,19 @@ tasks:
     cmds:
       - go run ./cmd -taskfile=test/Taskfile.all.yml
 
-  run:poc:
-    desc: Run poc program
+  run:poc:bubbletea:
+    desc: Run bubbletea poc program
     cmds:
       - go run ./poc/bubbletea -target={{.TARGET}}
     vars:
       TARGET: '{{.TARGET | default "varInputter"}}'
+
+  run:poc:lipgloss:
+    desc: Run lipgloss poc program
+    cmds:
+      - go run ./poc/lipgloss -target={{.TARGET}}
+    vars:
+      TARGET: '{{.TARGET | default "tutorial"}}'
 
   fmt:
     desc: Format go program
