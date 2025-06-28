@@ -24,22 +24,30 @@ tasks:
   run:vars:
     desc: Run vars test program
     cmds:
-      - go run ./cmd -taskfile=test/Taskfile.vars.yml
+      - task: run
+        vars:
+          TF: test/Taskfile.vars.yml
 
   run:deps:
     desc: Run deps test program
     cmds:
-      - go run ./cmd -taskfile=test/Taskfile.deps.yml
+      - task: run
+        vars:
+          TF: test/Taskfile.deps.yml
 
   run:includes:
     desc: Run vars test program
     cmds:
-      - go run ./cmd -taskfile=test/Taskfile.includes.yml
+      - task: run
+        vars:
+          TF: test/Taskfile.includes.yml
 
   run:all:
     desc: Run all test program
     cmds:
-      - go run ./cmd -taskfile=test/Taskfile.all.yml
+      - task: run
+        vars:
+          TF: test/Taskfile.all.yml
 
   run:poc:bubbletea:
     desc: Run bubbletea poc program
