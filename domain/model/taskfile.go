@@ -108,16 +108,16 @@ func (tf *Taskfile) SelectTask() (*Task, error) {
 	return task, nil
 }
 
-// CollectAllVars は、タスクの変数を依存タスクまで再起的に探索して集める
+// CollectAllVars は、タスクの変数を他のタスクまで再起的に探索して集める
 func (tf *Taskfile) CollectAllVars(task *Task) (*Vars, error) {
 	vars := task.Vars.Duplicate()
-	for _, cmd := range task.Cmds.FilterByDependencyTask() {
-		depsTask := tf.FindTaskByFullName(cmd.DependencyTask.FullName)
-		if depsTask == nil {
-			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, cmd.DependencyTask.FullName)
+	for _, cmd := range task.Cmds.FilterByAnotherTask() {
+		anotherTask := tf.FindTaskByFullName(cmd.AnotherTask.FullName)
+		if anotherTask == nil {
+			return nil, fmt.Errorf("%w: dependency task = %s", ErrTaskNotFound, cmd.AnotherTask.FullName)
 		}
 
-		vs, err := tf.CollectAllVars(depsTask)
+		vs, err := tf.CollectAllVars(anotherTask)
 		if err != nil {
 			return nil, fmt.Errorf("tf.CollectAllVars: %w", err)
 		}

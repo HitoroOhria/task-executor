@@ -22,11 +22,11 @@ func NewCmds(cmds []*ast.Cmd, includeNames []string) (Cmds, error) {
 	return cs, nil
 }
 
-// FilterByDependencyTask は依存タスクのコマンドのみにフィルターする
-func (cs Cmds) FilterByDependencyTask() []*Cmd {
+// FilterByAnotherTask は他のタスクのコマンドのみにフィルターする
+func (cs Cmds) FilterByAnotherTask() []*Cmd {
 	cmds := make([]*Cmd, 0, len(cs))
 	for _, c := range cs {
-		if c.DependencyTask == nil {
+		if c.AnotherTask == nil {
 			continue
 		}
 

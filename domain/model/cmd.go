@@ -9,12 +9,12 @@ import (
 
 // Cmd はコマンド
 type Cmd struct {
-	Command        *string
-	DependencyTask *DependencyTask
+	Command     *string
+	AnotherTask *AnotherTask
 }
 
-// DependencyTask は依存タスクのコマンド
-type DependencyTask struct {
+// AnotherTask は他のタスク
+type AnotherTask struct {
 	Name     value.TaskName
 	FullName value.FullTaskName
 }
@@ -25,7 +25,7 @@ func NewCmd(cmd *ast.Cmd, includeNames []string) (*Cmd, error) {
 		command = &cmd.Cmd
 	}
 
-	var dependencyTask *DependencyTask
+	var anotherTask *AnotherTask
 	if cmd.Task != "" {
 		name, err := value.NewTaskName(cmd.Task)
 		if err != nil {
@@ -33,14 +33,14 @@ func NewCmd(cmd *ast.Cmd, includeNames []string) (*Cmd, error) {
 		}
 		fullName := value.NewIncludedFullTaskName(includeNames, cmd.Task)
 
-		dependencyTask = &DependencyTask{
+		anotherTask = &AnotherTask{
 			Name:     name,
 			FullName: fullName,
 		}
 	}
 
 	return &Cmd{
-		Command:        command,
-		DependencyTask: dependencyTask,
+		Command:     command,
+		AnotherTask: anotherTask,
 	}, nil
 }
