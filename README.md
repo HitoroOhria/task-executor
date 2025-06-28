@@ -58,6 +58,18 @@ $ task build
 $ ./task-executor
 ```
 
+## Development
+
+Run program via Taskfile.
+
+```shell
+$ task run TF="<taskfile>"
+$ task run:vars
+$ task run:includes
+$ task run:deps
+$ task run:all
+```
+
 ## Features and TODOs
 
 - [x] 必須な変数を入力できるようにする
@@ -75,18 +87,6 @@ $ ./task-executor
 - [ ] run に Copy ボタンを追加する
 - [ ] インクリメンタルサーチの TUI を実装する
 - [ ] より実践的な形式に対応する
-
-## Development
-
-Run program via Taskfile.
-
-```shell
-$ task run TF="<taskfile>"
-$ task run:vars
-$ task run:includes
-$ task run:deps
-$ task run:all
-```
 
 ## Learning programming
 
