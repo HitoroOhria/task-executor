@@ -55,7 +55,7 @@ DUPLICATE=
 
 ```shell
 $ task build
-$ ./main
+$ ./task-executor
 ```
 
 ## Features and TODOs
