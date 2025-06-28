@@ -58,6 +58,31 @@ $ task build
 $ ./task-executor
 ```
 
+## Specification
+
+- [変数](https://taskfile.dev/usage/#variables)
+  - 必須変数は、必ず値の入力が必要である
+  - オプショナル変数は、値を入力しなくても良い
+  - オプショナル変数には、入力ができるものとできないものが存在する
+    - 入力できるもの
+      - `'{{.USER_NAME}}'` のように、オプショナル変数である場合
+      - `'{{.USER_NAME | default "DefaultUser"}}'` のように、デフォルト値付きのオプショナル変数である場合
+    - 入力できないもの
+      - `STRING: 'Hello, World!'` のように、固定値が割り当てられている場合
+      - `GIT_COMMIT: sh: git log -n 1 --format=%h` のように、[動的変数](https://taskfile.dev/usage/#dynamic-variables)である場合
+      - `FOO: ref: .BAR` のように、[他の変数の参照](https://taskfile.dev/usage/#referencing-other-variables)である場合
+  - グローバル変数は、値を入力できない
+  - 同じな名前の変数が2つ以上ある場合、入力は1つにまとめられる
+- [内部タスク](https://taskfile.dev/usage/#internal-tasks)
+  - 内部タスクの変数は、値を入力できない
+- [依存タスク](https://taskfile.dev/usage/#task-dependencies)
+  - 依存先のタスクの変数は、入力が可能である
+- [他のタスクの呼び出し](https://taskfile.dev/usage/#calling-another-task)
+  - 呼び出し先のタスクの変数は、入力が可能である
+  - 呼び出し先のタスクの変数が、呼び出し元のタスクにより変数の値を指定されていた場合、その変数の値を入力することはできない
+- [包含](https://taskfile.dev/usage/#including-other-taskfiles)
+  - 包含した Taskfile のタスクの変数も、入力が可能である
+
 ## Development
 
 Run program via Taskfile.
