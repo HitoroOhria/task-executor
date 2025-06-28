@@ -112,6 +112,7 @@ $ task run:all
 - [ ] run に Copy ボタンを追加する
 - [ ] インクリメンタルサーチの TUI を実装する
 - [ ] より実践的な形式に対応する
+- [ ] [必須変数 & Enum](https://taskfile.dev/usage/#ensuring-required-variables-have-allowed-values) 形式に対応する
 
 ## Learning programming
 
