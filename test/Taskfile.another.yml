@@ -2,9 +2,9 @@ version: "3"
 
 includes:
   nested1:
-    taskfile: ./Taskfile.deps.nested1.yml
+    taskfile: ./Taskfile.another.nested1.yml
   nested2:
-    taskfile: ./Taskfile.deps.nested2.yml
+    taskfile: ./Taskfile.another.nested2.yml
 
 vars:
   DEFAULT_BASE: "default-base"
@@ -17,11 +17,11 @@ tasks:
     cmds:
       - echo "print"
 
-  deps:
-    desc: Has dependency task
+  another:
+    desc: Has another task
     silent: true
     cmds:
-      - echo "deps"
+      - echo "another"
       - task: print
 
   has-vars:
@@ -36,29 +36,29 @@ tasks:
     requires:
       vars: [ HAS_VARS_REQUIRED ]
 
-  deps-has-vars:
-    desc: Has dependency task
+  another-has-vars:
+    desc: Has another task
     silent: true
     cmds:
-      - echo "DEPS_HAS_VARS_REQUIRED={{.DEPS_HAS_VARS_REQUIRED}}"
-      - echo "DEPS_HAS_VARS_OPTIONAL={{.DEPS_HAS_VARS_OPTIONAL}}"
+      - echo "ANOTHER_HAS_VARS_REQUIRED={{.ANOTHER_HAS_VARS_REQUIRED}}"
+      - echo "ANOTHER_HAS_VARS_OPTIONAL={{.ANOTHER_HAS_VARS_OPTIONAL}}"
       - task: has-vars
     vars:
-      DEPS_HAS_VARS_OPTIONAL: "{{.DEPS_HAS_VARS_OPTIONAL}}"
+      ANOTHER_HAS_VARS_OPTIONAL: "{{.ANOTHER_HAS_VARS_OPTIONAL}}"
     requires:
-      vars: [ DEPS_HAS_VARS_REQUIRED ]
+      vars: [ ANOTHER_HAS_VARS_REQUIRED ]
 
-  double-deps-has-vars:
-    desc: Has double dependency task
+  double-another-has-vars:
+    desc: Has double another task
     silent: true
     cmds:
-      - echo "DOUBLE_DEPS_HAS_VARS_REQUIRED={{.DOUBLE_DEPS_HAS_VARS_REQUIRED}}"
-      - echo "DOUBLE_DEPS_HAS_VARS_OPTIONAL={{.DOUBLE_DEPS_HAS_VARS_OPTIONAL}}"
-      - task: deps-has-vars
+      - echo "DOUBLE_ANOTHER_HAS_VARS_REQUIRED={{.DOUBLE_ANOTHER_HAS_VARS_REQUIRED}}"
+      - echo "DOUBLE_ANOTHER_HAS_VARS_OPTIONAL={{.DOUBLE_ANOTHER_HAS_VARS_OPTIONAL}}"
+      - task: another-has-vars
     vars:
-      DOUBLE_DEPS_HAS_VARS_OPTIONAL: "{{.DOUBLE_DEPS_HAS_VARS_OPTIONAL}}"
+      DOUBLE_ANOTHER_HAS_VARS_OPTIONAL: "{{.DOUBLE_ANOTHER_HAS_VARS_OPTIONAL}}"
     requires:
-      vars: [ DOUBLE_DEPS_HAS_VARS_REQUIRED ]
+      vars: [ DOUBLE_ANOTHER_HAS_VARS_REQUIRED ]
 
   has-nested:
     desc: Has nested task

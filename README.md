@@ -91,7 +91,7 @@ Run program via Taskfile.
 $ task run TF="<taskfile>"
 $ task run:vars
 $ task run:includes
-$ task run:deps
+$ task run:another
 $ task run:all
 ```
 

@@ -28,12 +28,12 @@ tasks:
         vars:
           TF: test/Taskfile.vars.yml
 
-  run:deps:
-    desc: Run deps test program
+  run:another:
+    desc: Run another test program
     cmds:
       - task: run
         vars:
-          TF: test/Taskfile.deps.yml
+          TF: test/Taskfile.another.yml
 
   run:includes:
     desc: Run vars test program

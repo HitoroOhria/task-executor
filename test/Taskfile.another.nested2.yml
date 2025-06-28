@@ -2,7 +2,7 @@ version: "3"
 
 includes:
   nested2-1:
-    taskfile: ./Taskfile.deps.nested2-1.yml
+    taskfile: ./Taskfile.another.nested2-1.yml
 
 tasks:
   print:
