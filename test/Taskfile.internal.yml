@@ -1,0 +1,20 @@
+version: "3"
+
+tasks:
+  internal:
+    desc: Internal task
+    silent: true
+    internal: true
+    cmds:
+      - echo "INTERNAL={{.INTERNAL}}"
+    vars:
+      INTERNAL: "{{.INTERNAL}}"
+
+  external:
+    desc: External task
+    silent: true
+    cmds:
+      - task: internal
+      - echo "EXTERNAL={{.EXTERNAL}}"
+    vars:
+      EXTERNAL: "{{.EXTERNAL}}"

@@ -28,6 +28,13 @@ tasks:
         vars:
           TF: test/Taskfile.vars.yml
 
+  run:internal:
+    desc: Run internal test program
+    cmds:
+      - task: run
+        vars:
+          TF: test/Taskfile.internal.yml
+
   run:another:
     desc: Run another test program
     cmds:
