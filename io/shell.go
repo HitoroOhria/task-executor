@@ -12,7 +12,7 @@ import (
 	"github.com/go-task/task/v3/errors"
 )
 
-const incrementalSearchTool = "peco"
+const incrementalSearchTool = "fzf"
 
 var (
 	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
