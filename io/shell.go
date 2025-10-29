@@ -15,7 +15,7 @@ import (
 const incrementalSearchTool = "fzf"
 
 var (
-	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml"}
+	searchTaskfiles = []string{"Taskfile.yml", "Taskfile.yaml", "Taskfile.local.yml", "Taskfile.local.yaml"}
 
 	selectTaskNameCommand = func(taskfile string) string {
 		return fmt.Sprintf(`
